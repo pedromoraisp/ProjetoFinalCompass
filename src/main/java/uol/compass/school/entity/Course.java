@@ -22,10 +22,12 @@ public class Course {
     @Column(nullable = false)
     private String name;
 
-    @ManyToMany
+    @ManyToMany(mappedBy = "courses")
     private List<Classroom> classrooms;
 
-    @OneToMany(mappedBy = "course")
+    @OneToMany(mappedBy = "course",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
     private List<Educator> educators;
 
 }

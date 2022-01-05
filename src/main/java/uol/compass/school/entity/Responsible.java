@@ -5,10 +5,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import uol.compass.school.enums.EducationalLevel;
+import uol.compass.school.enums.Gender;
+import uol.compass.school.enums.RelationshipType;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Data
@@ -26,6 +28,12 @@ public class Responsible {
 
     @Column(nullable = false)
     private String cpf;
+
+    @Column(nullable = false)
+    private RelationshipType relationshipType;
+
+    @Column(nullable = false)
+    private Gender gender;
 
     @Column(nullable = false)
     private String identityCard;
@@ -49,6 +57,13 @@ public class Responsible {
     @Column(nullable = false)
     private String phone;
 
-    @ManyToMany
-    private List<Student> students;
+    @ManyToMany(cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+    })
+    @JoinTable(name = "responsible_student",
+            joinColumns = @JoinColumn(name = "responsible_id"),
+            inverseJoinColumns = @JoinColumn(name = "student_id")
+    )
+    private Set<Student> students;
 }

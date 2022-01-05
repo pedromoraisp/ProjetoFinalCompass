@@ -26,9 +26,18 @@ public class Classroom {
     @Column(nullable = false)
     private LocalDate finalDate;
 
-    @OneToMany(mappedBy = "classroom")
+    @OneToMany(mappedBy = "classroom",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
     private List<Student> students;
 
-    @ManyToMany
+    @ManyToMany(cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+    })
+    @JoinTable(name = "classroom_course",
+            joinColumns = @JoinColumn(name = "classroom_id"),
+            inverseJoinColumns = @JoinColumn(name = "course_id")
+    )
     private List<Course> courses;
 }

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import uol.compass.school.enums.Gender;
 
 import javax.persistence.*;
 
@@ -21,7 +22,9 @@ public class Educator {
     @Column(nullable = false)
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "course_id")
+    @Column(nullable = false)
+    private Gender gender;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     private Course course;
 }

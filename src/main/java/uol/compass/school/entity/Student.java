@@ -5,10 +5,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import uol.compass.school.enums.EducationalLevel;
+import uol.compass.school.enums.Gender;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Data
@@ -23,6 +25,9 @@ public class Student {
 
     @Column(nullable = false)
     private String name;
+
+    @Column(nullable = false)
+    private Gender gender;
 
     @Column
     private String cpf;
@@ -46,13 +51,14 @@ public class Student {
     @Column(nullable = false)
     private String school;
 
-    @ManyToMany
-    private List<Responsible> responsible;
+    @ManyToMany(mappedBy = "students")
+    private Set<Responsible> responsible;
 
-    @ManyToOne
-    @JoinColumn(name = "classroom_id")
+    @ManyToOne(fetch = FetchType.LAZY)
     private Classroom classroom;
 
-    @OneToMany(mappedBy = "student")
+    @OneToMany(mappedBy = "student",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
     private List<Occurrence> occurrences;
 }

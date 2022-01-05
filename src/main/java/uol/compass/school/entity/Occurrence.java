@@ -35,7 +35,6 @@ public class Occurrence {
     @Column(nullable = false)
     private OccurrenceType occurrenceType;
 
-    @ManyToOne
-    @JoinColumn(name = "student_id")
+    @ManyToOne(fetch = FetchType.LAZY)
     private Student student;
 }
