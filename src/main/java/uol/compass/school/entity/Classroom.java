@@ -26,9 +26,7 @@ public class Classroom {
     @Column(nullable = false)
     private LocalDate finalDate;
 
-    @OneToMany(mappedBy = "classroom",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true)
+    @OneToMany(mappedBy = "classroom")
     private List<Student> students;
 
     @ManyToMany(cascade = {
