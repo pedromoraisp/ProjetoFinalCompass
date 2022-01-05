@@ -41,7 +41,7 @@ public class Responsible {
     @Column(nullable = false)
     private LocalDate birthdate;
 
-    @Column(nullable = false)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Address address;
 
     @Enumerated(EnumType.STRING)
