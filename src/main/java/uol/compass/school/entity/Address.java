@@ -6,26 +6,33 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Course {
+public class Address {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    private String name;
+    private String street;
 
-    @ManyToMany(mappedBy = "courses")
-    private List<Classroom> classrooms;
+    @Column(nullable = false)
+    private Integer number;
 
-    @OneToMany(mappedBy = "course")
-    private List<Educator> educators;
+    @Column(nullable = false)
+    private String district;
 
+    @Column(nullable = false)
+    private String cep;
+
+    @Column(nullable = false)
+    private String city;
+
+    @Column(nullable = false)
+    private String uf;
 }

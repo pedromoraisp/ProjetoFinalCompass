@@ -42,7 +42,7 @@ public class Responsible {
     private LocalDate birthdate;
 
     @Column(nullable = false)
-    private String address;
+    private Address address;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

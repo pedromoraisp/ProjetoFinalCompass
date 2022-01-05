@@ -38,8 +38,8 @@ public class Student {
     @Column(nullable = false)
     private LocalDate birthdate;
 
-    @Column(nullable = false)
-    private String address;
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Address address;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -57,8 +57,6 @@ public class Student {
     @ManyToOne(fetch = FetchType.LAZY)
     private Classroom classroom;
 
-    @OneToMany(mappedBy = "student",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true)
+    @OneToMany(mappedBy = "student")
     private List<Occurrence> occurrences;
 }
