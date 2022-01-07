@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
-import uol.compass.school.dto.request.StudentFormDTO;
+import uol.compass.school.dto.request.StudentRequestDTO;
 import uol.compass.school.dto.response.MessageResponseDTO;
 import uol.compass.school.dto.response.StudentDTO;
 import uol.compass.school.entity.Student;
@@ -30,8 +30,8 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public MessageResponseDTO create(StudentFormDTO studentFormDTO) {
-        Student studentToSave = modelMapper.map(studentFormDTO, Student.class);
+    public MessageResponseDTO create(StudentRequestDTO studentRequestDTO) {
+        Student studentToSave = modelMapper.map(studentRequestDTO, Student.class);
         Student savedStudent = this.studentRepository.save(studentToSave);
 
         return MessageResponseDTO.builder()
@@ -41,7 +41,6 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public List<StudentDTO> findAll(String name) {
-
         List<Student> students;
 
         if (name == null) {
@@ -64,12 +63,12 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public MessageResponseDTO update(Long id, StudentFormDTO studentFormDTO) {
+    public MessageResponseDTO update(Long id, StudentRequestDTO studentRequestDTO) {
         Student student = this.studentRepository.findById(id)
                 .orElseThrow(() ->
                         new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Unable to find student with id %s", id)));
 
-        Student studentToSave = modelMapper.map(studentFormDTO, Student.class);
+        Student studentToSave = modelMapper.map(studentRequestDTO, Student.class);
         studentToSave.setId(id);
 
         this.studentRepository.save(studentToSave);
@@ -77,13 +76,12 @@ public class StudentServiceImpl implements StudentService {
         return MessageResponseDTO.builder()
                 .message(String.format("Student with id %s was successfully updated", student.getId()))
                 .build();
-
     }
 
     @Transactional
     @Override
     public MessageResponseDTO deleteById(Long id) {
-        Student student = this.studentRepository.findById(id)
+        this.studentRepository.findById(id)
                 .orElseThrow(() ->
                         new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Unable to find student with id %s", id)));
 

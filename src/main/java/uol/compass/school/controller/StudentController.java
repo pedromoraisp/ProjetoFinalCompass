@@ -3,12 +3,11 @@ package uol.compass.school.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import uol.compass.school.dto.request.StudentFormDTO;
+import uol.compass.school.dto.request.StudentRequestDTO;
 import uol.compass.school.dto.response.MessageResponseDTO;
 import uol.compass.school.dto.response.StudentDTO;
 import uol.compass.school.service.StudentService;
 
-import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -24,10 +23,9 @@ public class StudentController {
     }
 
     @PostMapping
-    @Transactional
     @ResponseStatus(HttpStatus.CREATED)
-    public MessageResponseDTO create(@RequestBody @Valid StudentFormDTO studentFormDTO) {
-        return this.studentService.create(studentFormDTO);
+    public MessageResponseDTO create(@RequestBody @Valid StudentRequestDTO studentRequestDTO) {
+        return this.studentService.create(studentRequestDTO);
     }
 
     @GetMapping
@@ -41,8 +39,8 @@ public class StudentController {
     }
 
     @PutMapping("/{id}")
-    public MessageResponseDTO update(@PathVariable Long id, @RequestBody StudentFormDTO studentFormDTO) {
-        return this.studentService.update(id, studentFormDTO);
+    public MessageResponseDTO update(@PathVariable Long id, @RequestBody StudentRequestDTO studentRequestDTO) {
+        return this.studentService.update(id, studentRequestDTO);
     }
 
     @DeleteMapping("/{id}")
