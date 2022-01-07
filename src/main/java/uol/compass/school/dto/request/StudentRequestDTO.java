@@ -17,7 +17,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class StudentFormDTO {
+public class StudentRequestDTO {
 
     @NotBlank
     private String name;
