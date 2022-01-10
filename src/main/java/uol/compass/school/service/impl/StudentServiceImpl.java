@@ -8,11 +8,15 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import uol.compass.school.dto.request.StudentRequestDTO;
 import uol.compass.school.dto.response.MessageResponseDTO;
+import uol.compass.school.dto.response.OccurrenceDTO;
 import uol.compass.school.dto.response.StudentDTO;
+import uol.compass.school.entity.Occurrence;
 import uol.compass.school.entity.Student;
 import uol.compass.school.repository.StudentRepository;
 import uol.compass.school.service.StudentService;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -90,5 +94,40 @@ public class StudentServiceImpl implements StudentService {
         return MessageResponseDTO.builder()
                 .message(String.format("Student with id %s was successfully deleted", id))
                 .build();
+    }
+
+    @Override
+    public List<OccurrenceDTO> findAllOccurrences(Long id, LocalDate initialDate, LocalDate finalDate) {
+        List<Occurrence> occurrences;
+
+        Student student = this.studentRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Unable to find student with id %s", id)));
+
+        occurrences = (student.getOccurrences() == null) ? new ArrayList<>() : student.getOccurrences();
+
+        if (initialDate == null && finalDate == null) {
+            return occurrences.stream().map(occurrence -> modelMapper.map(occurrence, OccurrenceDTO.class))
+                    .collect(Collectors.toList());
+        } else {
+            if(initialDate == null) {
+                initialDate = LocalDate.now().minusYears(5);
+            }
+            if(finalDate == null) {
+                finalDate = LocalDate.now();
+            }
+
+            LocalDate finalInitialDate = initialDate;
+            LocalDate finalFinalDate = finalDate;
+
+            List<Occurrence> filteredOccurrences = occurrences.stream().
+                    filter(occurrence ->
+                            (occurrence.getDate().isEqual(finalInitialDate) || occurrence.getDate().isAfter(finalInitialDate)) &&
+                                    (occurrence.getDate().isEqual(finalFinalDate) || occurrence.getDate().isBefore(finalFinalDate)))
+                    .collect(Collectors.toList());
+
+            return filteredOccurrences.stream().map(occurrence -> modelMapper.map(occurrence, OccurrenceDTO.class))
+                    .collect(Collectors.toList());
+        }
     }
 }
