@@ -26,6 +26,8 @@ public class ResponsibleDTO {
 
     private String identityCard;
 
+    private String phone;
+
     private RelationshipType relationshipType;
 
     private LocalDate birthdate;
@@ -36,5 +38,4 @@ public class ResponsibleDTO {
 
     private String profession;
 
-    private String phone;
-}
+    }

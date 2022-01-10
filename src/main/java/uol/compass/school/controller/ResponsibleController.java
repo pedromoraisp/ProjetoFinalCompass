@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import uol.compass.school.dto.request.ResponsibleRequestDTO;
-import uol.compass.school.dto.request.StudentFormDTO;
 import uol.compass.school.dto.response.MessageResponseDTO;
 import uol.compass.school.dto.response.ResponsibleDTO;
 import uol.compass.school.service.ResponsibleService;
@@ -15,7 +14,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/api/v1/responsibles")
+@RequestMapping("/api/v1/responsible")
 public class ResponsibleController {
 
     private ResponsibleService responsibleService;

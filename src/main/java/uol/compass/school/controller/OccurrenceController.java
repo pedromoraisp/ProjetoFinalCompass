@@ -17,10 +17,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import uol.compass.school.dto.request.OccurrenceRequestDTO;
-import uol.compass.school.dto.request.StudentFormDTO;
 import uol.compass.school.dto.response.MessageResponseDTO;
 import uol.compass.school.dto.response.OccurrenceDTO;
-import uol.compass.school.dto.response.StudentDTO;
 import uol.compass.school.service.impl.OccurrenceServiceImpl;
 
 @RestController
