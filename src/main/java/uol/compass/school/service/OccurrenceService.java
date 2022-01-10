@@ -1,11 +1,11 @@
 package uol.compass.school.service;
 
-import java.time.LocalDate;
-import java.util.List;
-
 import uol.compass.school.dto.request.OccurrenceRequestDTO;
 import uol.compass.school.dto.response.MessageResponseDTO;
 import uol.compass.school.dto.response.OccurrenceDTO;
+
+import java.time.LocalDate;
+import java.util.List;
 
 public interface OccurrenceService {
 	
