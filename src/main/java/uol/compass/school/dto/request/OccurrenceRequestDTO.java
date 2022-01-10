@@ -5,12 +5,15 @@ import java.time.LocalDate;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 import uol.compass.school.entity.Student;
 import uol.compass.school.enums.CommunicationType;
 import uol.compass.school.enums.OccurrenceType;
 
 public class OccurrenceRequestDTO {
-
+	
 	    @NotNull
 	    private LocalDate date;
 	    
