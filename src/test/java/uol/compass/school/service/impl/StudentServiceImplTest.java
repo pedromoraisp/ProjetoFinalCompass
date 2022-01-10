@@ -7,19 +7,21 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import org.springframework.web.server.ResponseStatusException;
+import uol.compass.school.Utils.OccurrenceUtils;
 import uol.compass.school.Utils.StudentUtils;
 import uol.compass.school.dto.request.StudentRequestDTO;
 import uol.compass.school.dto.response.MessageResponseDTO;
+import uol.compass.school.dto.response.OccurrenceDTO;
 import uol.compass.school.dto.response.StudentDTO;
 import uol.compass.school.entity.Student;
 import uol.compass.school.repository.StudentRepository;
 
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -56,8 +58,8 @@ class StudentServiceImplTest {
         StudentDTO expectedStudentDTO = StudentUtils.createStudentDTO();
         List<StudentDTO> expectedStudentsDTO = Collections.singletonList(expectedStudentDTO);
 
-        when(modelMapper.map(expectedStudent, StudentDTO.class)).thenReturn(expectedStudentDTO);
         when(studentRepository.findAll()).thenReturn(Collections.singletonList(expectedStudent));
+        when(modelMapper.map(expectedStudent, StudentDTO.class)).thenReturn(expectedStudentDTO);
 
         List<StudentDTO> studentsDTO = studentService.findAll(null);
 
@@ -72,8 +74,8 @@ class StudentServiceImplTest {
         StudentDTO expectedStudentDTO = StudentUtils.createStudentDTO();
         List<StudentDTO> expectedStudentsDTO = Collections.singletonList(expectedStudentDTO);
 
-        when(modelMapper.map(expectedStudent, StudentDTO.class)).thenReturn(expectedStudentDTO);
         when(studentRepository.findByNameStartingWith(name)).thenReturn(Collections.singletonList(expectedStudent));
+        when(modelMapper.map(expectedStudent, StudentDTO.class)).thenReturn(expectedStudentDTO);
 
         List<StudentDTO> studentsDTO = studentService.findAll(name);
 
@@ -163,5 +165,122 @@ class StudentServiceImplTest {
         when(studentRepository.findById(id)).thenReturn(Optional.empty());
 
         assertThrows(ResponseStatusException.class, () -> studentService.deleteById(id));
+    }
+
+    @Test
+    void whenFindAllFromAStudentIsCalledWithoutFilterThenReturnAllOccurrences() {
+        Long id = 1L;
+        Student expectedStudent = StudentUtils.createStudentWithOccurrences();
+        OccurrenceDTO occurrenceDTO = OccurrenceUtils.createOccurrenceDTO();
+
+        when(studentRepository.findById(id)).thenReturn(Optional.of(expectedStudent));
+        when(modelMapper.map(expectedStudent.getOccurrences().get(0), OccurrenceDTO.class))
+                .thenReturn(occurrenceDTO);
+
+        List<OccurrenceDTO> allOccurrences = studentService.findAllOccurrences(id, null, null);
+
+        assertEquals(Collections.singletonList(occurrenceDTO), allOccurrences);
+    }
+
+    @Test
+    void whenFindAllIsCalledFromAStudentWithoutOccurrencesThenReturnAnEmptyList() {
+        Long id = 1L;
+        Student expectedStudent = StudentUtils.createStudent();
+
+        when(studentRepository.findById(id)).thenReturn(Optional.of(expectedStudent));
+
+        List<OccurrenceDTO> allOccurrences = studentService.findAllOccurrences(id, null, null);
+
+        assertEquals(Collections.emptyList(), allOccurrences);
+    }
+
+    @Test
+    void whenFindAllFromAStudentIsCalledWithFilterThenReturnAllOccurrencesWithThisFilter() {
+        Long id = 1L;
+        Student expectedStudent = StudentUtils.createStudentWithOccurrences();
+        expectedStudent.getOccurrences().get(0).setDate(LocalDate.of(2021, 01, 15));
+        OccurrenceDTO occurrenceDTO = OccurrenceUtils.createOccurrenceDTO();
+
+        when(studentRepository.findById(id)).thenReturn(Optional.of(expectedStudent));
+        when(modelMapper.map(expectedStudent.getOccurrences().get(0), OccurrenceDTO.class))
+                .thenReturn(occurrenceDTO);
+
+        List<OccurrenceDTO> allOccurrences = studentService.findAllOccurrences(
+                id,
+                LocalDate.of(2021, 1, 1),
+                LocalDate.of(2021, 12, 31));
+
+        assertEquals(Collections.singletonList(occurrenceDTO), allOccurrences);
+    }
+
+    @Test
+    void whenFindAllFromAStudentIsCalledWithInitialDateThenReturnAllOccurrencesWithThisFilter() {
+        Long id = 1L;
+        Student expectedStudent = StudentUtils.createStudentWithOccurrences();
+        expectedStudent.getOccurrences().get(0).setDate(LocalDate.of(2021, 01, 15));
+        OccurrenceDTO occurrenceDTO = OccurrenceUtils.createOccurrenceDTO();
+
+        when(studentRepository.findById(id)).thenReturn(Optional.of(expectedStudent));
+        when(modelMapper.map(expectedStudent.getOccurrences().get(0), OccurrenceDTO.class))
+                .thenReturn(occurrenceDTO);
+
+        List<OccurrenceDTO> allOccurrences = studentService.findAllOccurrences(
+                id,
+                LocalDate.of(2021, 1, 1),
+                null);
+
+        assertEquals(Collections.singletonList(occurrenceDTO), allOccurrences);
+    }
+
+    @Test
+    void whenFindAllFromAStudentIsCalledWithFinalDateThenReturnAllOccurrencesWithThisFilter() {
+        Long id = 1L;
+        Student expectedStudent = StudentUtils.createStudentWithOccurrences();
+        expectedStudent.getOccurrences().get(0).setDate(LocalDate.of(2021, 01, 15));
+        OccurrenceDTO occurrenceDTO = OccurrenceUtils.createOccurrenceDTO();
+
+        when(studentRepository.findById(id)).thenReturn(Optional.of(expectedStudent));
+        when(modelMapper.map(expectedStudent.getOccurrences().get(0), OccurrenceDTO.class))
+                .thenReturn(occurrenceDTO);
+
+        List<OccurrenceDTO> allOccurrences = studentService.findAllOccurrences(
+                id,
+                null,
+                LocalDate.of(2021, 12, 31));
+
+        assertEquals(Collections.singletonList(occurrenceDTO), allOccurrences);
+    }
+
+    @Test
+    void whenFindAllFromAStudentIsCalledWithFilterThenReturnEmptyList() {
+        Long id = 1L;
+        Student expectedStudent = StudentUtils.createStudentWithOccurrences();
+        expectedStudent.getOccurrences().get(0).setDate(LocalDate.of(2020, 01, 15));
+
+        when(studentRepository.findById(id)).thenReturn(Optional.of(expectedStudent));
+
+        List<OccurrenceDTO> allOccurrences = studentService.findAllOccurrences(
+                id,
+                LocalDate.of(2021, 1, 1),
+                LocalDate.of(2021, 12, 31));
+
+        assertEquals(Collections.emptyList(), allOccurrences);
+    }
+
+    @Test
+    void whenFindAllOccurrencesIsCalledFromANonexistantStudentThenThrowResponseStatusException() {
+        Long id = 1L;
+
+        when(studentRepository.findById(id)).thenReturn(Optional.empty());
+
+        try {
+            studentService.findById(id);
+            fail();
+        } catch (ResponseStatusException exception) {
+            assertEquals("404 NOT_FOUND \"Unable to find student with id 1\"", exception.getMessage());
+        }
+
+
+        //assertThrows(ResponseStatusException.class, () -> studentService.findById(id), "Unable to find student with id 1");
     }
 }
