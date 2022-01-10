@@ -7,11 +7,13 @@ import org.springframework.web.bind.annotation.*;
 import uol.compass.school.dto.request.OccurrenceRequestDTO;
 import uol.compass.school.dto.response.MessageResponseDTO;
 import uol.compass.school.dto.response.OccurrenceDTO;
+
 import uol.compass.school.service.OccurrenceService;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.List;
+
 
 @RestController
 @RequestMapping("/api/v1/occurrences")
