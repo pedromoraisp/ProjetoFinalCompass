@@ -51,44 +51,29 @@ class OccurrenceServiceImplTest {
     }
 
     @Test
-    void whenFindAllWithoutNameIsCalledThenReturnAllOccurrences() {
+    void whenFindAllWithoutParamIsCalledThenReturnAllOccurrences() {
     	Occurrence expectedOccurrence = OccurrenceUtils.createOccurrence();
     	OccurrenceDTO expectedOccurrenceDTO = OccurrenceUtils.createOccurrenceDTO();
-        List<OccurrenceDTO> expectedStudentsDTO = Collections.singletonList(expectedOccurrenceDTO);
-
-        when(modelMapper.map(expectedOccurrence, OccurrenceDTO.class)).thenReturn(expectedOccurrenceDTO);
-        when(occurrenceRepository.findAll()).thenReturn(Collections.singletonList(expectedOccurrence));
-
-        List<OccurrenceDTO> occurrencesDTO = occurrenceService.findAll(null);
-
-        assertEquals(occurrencesDTO, expectedOccurrencesDTO);
-    }
-
-    @Test
-    void whenFindAllWithNameIsCalledThenReturnAllOccurrencesWithThisName() {
-        String name = "Pedro";
-
-        Occurrence expectedOccurrence = OccurrenceUtils.createOccurrence();
-        OccurrenceDTO expectedOccurrenceDTO = OccurrenceUtils.createOccurrenceDTO();
         List<OccurrenceDTO> expectedOccurrencesDTO = Collections.singletonList(expectedOccurrenceDTO);
 
+        when(occurrenceRepository.findAll()).thenReturn(Collections.singletonList(expectedOccurrence));
         when(modelMapper.map(expectedOccurrence, OccurrenceDTO.class)).thenReturn(expectedOccurrenceDTO);
-        when(occurrenceRepository.findByNameStartingWith(id)).thenReturn(Collections.singletonList(expectedOccurrence));
 
-        List<OccurrenceDTO> studentsDTO = occurrenceService.findAll(id);
+        List<OccurrenceDTO> occurrencesDTO = occurrenceService.findAll(null, null);
 
         assertEquals(occurrencesDTO, expectedOccurrencesDTO);
     }
 
     @Test
-    void whenFindAllWithAnNonexistentNameIsCalledThenReturnAnEmptyList() {
-        String name = "Pedro";
+    void whenFindAllWithDatesIsCalledThenReturnAllOccurrencesBetweenThisDates() {
+        // Filtro deve retornar lista de ocorrencias com a data -> 2021-01-01
+        // Parametros -> initialDate = 2020-01-01 & finalDate = 2021-12-31
+    }
 
-        when(occurrenceRepository.findByNameStartingWith(name)).thenReturn(Collections.EMPTY_LIST);
-
-        List<OccurrenceDTO> studentsDTO = occurrenceService.findAll(name);
-
-        assertEquals(occurrencesDTO.size(), 0);
+    @Test
+    void whenThereIsNoOccurrenceBetweenTheDatesInFindAllThenReturnAnEmptyList() {
+        // Filtro deve retornar uma lista vazia -> 2021-01-01
+        // Parametros -> initialDate = 2020-01-01 & finalDate = 2020-12-31
     }
 
     @Test
@@ -97,7 +82,7 @@ class OccurrenceServiceImplTest {
         Occurrence expectedOccurrence = OccurrenceUtils.createOccurrence();
         OccurrenceDTO expectedOccurrenceDTO = OccurrenceUtils.createOccurrenceDTO();
 
-        when(occurrencetRepository.findById(id)).thenReturn(Optional.of(expectedOccurrence));
+        when(occurrenceRepository.findById(id)).thenReturn(Optional.of(expectedOccurrence));
         when(modelMapper.map(expectedOccurrence, OccurrenceDTO.class)).thenReturn(expectedOccurrenceDTO);
 
         OccurrenceDTO occurrenceDTO = occurrenceService.findById(id);
