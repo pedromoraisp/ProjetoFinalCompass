@@ -1,33 +1,33 @@
-package uol.compass.school.entity;
+package uol.compass.school.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import uol.compass.school.entity.Classroom;
+import uol.compass.school.entity.Course;
 import uol.compass.school.enums.Gender;
 
-import javax.persistence.*;
+import java.time.LocalDate;
+import java.util.Set;
 
-@Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Educator {
+public class EducatorDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
     private String name;
-    
-    @Column
-    private String cpf;
-    
-    @Column(nullable = false)
+
     private Gender gender;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    private String cpf;
+
     private Course course;
+
+    private String school;
+
+    private Classroom classroom;
 }

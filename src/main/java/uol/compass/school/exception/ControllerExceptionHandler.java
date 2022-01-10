@@ -37,12 +37,11 @@ public class ControllerExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public List<RequestValidationErrorDTO> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
-
         List<RequestValidationErrorDTO> requestValidationErrorDTOs = new ArrayList<>();
 
         List<FieldError> fieldErrors = exception.getBindingResult().getFieldErrors();
-
         fieldErrors.forEach(e -> {
 
             String message = messageSource.getMessage(e, LocaleContextHolder.getLocale());

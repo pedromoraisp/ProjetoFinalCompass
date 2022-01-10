@@ -1,16 +1,11 @@
 package uol.compass.school.service.impl;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
-
 import uol.compass.school.dto.request.OccurrenceRequestDTO;
 import uol.compass.school.dto.response.MessageResponseDTO;
 import uol.compass.school.dto.response.OccurrenceDTO;
@@ -19,6 +14,10 @@ import uol.compass.school.entity.Student;
 import uol.compass.school.repository.OccurrenceRepository;
 import uol.compass.school.repository.StudentRepository;
 import uol.compass.school.service.OccurrenceService;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class OccurrenceServiceImpl implements OccurrenceService {
@@ -36,9 +35,9 @@ public class OccurrenceServiceImpl implements OccurrenceService {
 
 	@Override
 	public MessageResponseDTO create(OccurrenceRequestDTO occurrenceRequestDTO) {
-
 		Occurrence occurrenceToSave = modelMapper.map(occurrenceRequestDTO, Occurrence.class);
-		Occurrence savedOccurrence = occurrenceRepository.save(occurrenceToSave);
+		Occurrence savedOccurrence = this.occurrenceRepository.save(occurrenceToSave);
+
 		return MessageResponseDTO.builder()
 				.message(String.format("Occurrence with id %s was successfully created", savedOccurrence.getId()))
 				.build();
@@ -46,13 +45,19 @@ public class OccurrenceServiceImpl implements OccurrenceService {
 
 	@Override
 	public List<OccurrenceDTO> findAll(LocalDate initialDate, LocalDate finalDate) {
-
 		List<Occurrence> occurrences;
 
 		if (initialDate == null && finalDate == null) {
 			occurrences = this.occurrenceRepository.findAll();
 		} else {
-			occurrences = this.occurrenceRepository.findByDateBetween( initialDate, finalDate);
+			if(initialDate == null) {
+				initialDate = LocalDate.now().minusYears(5);
+			}
+			if(finalDate == null) {
+				finalDate = LocalDate.now();
+			}
+
+			occurrences = this.occurrenceRepository.findByDateBetween(initialDate, finalDate);
 		}
 
 		return occurrences.stream().map(occurrence -> modelMapper.map(occurrence, OccurrenceDTO.class))
@@ -80,8 +85,8 @@ public class OccurrenceServiceImpl implements OccurrenceService {
 		this.occurrenceRepository.save(occurrenceToSave);
 
 		return MessageResponseDTO.builder()
-				.message(String.format("Occurrence with id %s was successfully updated", occurrence.getId())).build();
-
+				.message(String.format("Occurrence with id %s was successfully updated", occurrence.getId()))
+				.build();
 	}
 
 	@Transactional
@@ -93,7 +98,8 @@ public class OccurrenceServiceImpl implements OccurrenceService {
 
 		this.occurrenceRepository.deleteById(id);
 
-		return MessageResponseDTO.builder().message(String.format("Occurrence with id %s was successfully deleted", id))
+		return MessageResponseDTO.builder()
+				.message(String.format("Occurrence with id %s was successfully deleted", id))
 				.build();
 	}
 
@@ -107,8 +113,9 @@ public class OccurrenceServiceImpl implements OccurrenceService {
 	                        new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Unable to find student with id %s", studentId)));
 		 occurrence.setStudent(student);
    
-		return MessageResponseDTO.builder().message(String.format("the occurrence with id %s was linked to the student with id %s successfully", occurrenceId, studentId)).build();
-	
+		return MessageResponseDTO.builder()
+				.message(String.format("the occurrence with id %s was linked to the student with id %s successfully", occurrenceId, studentId))
+				.build();
 	}
 
 }

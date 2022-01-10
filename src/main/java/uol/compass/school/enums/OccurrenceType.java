@@ -2,7 +2,7 @@ package uol.compass.school.enums;
 
 public enum OccurrenceType {
 	AGRESSAO_FISICA,
-	AGRASSAO_VERBAL,
+	AGRESSAO_VERBAL,
 	DESOBEDIENCIA,
 	OUTROS
 }

@@ -1,33 +1,33 @@
 package uol.compass.school.controller;
 
-import org.hamcrest.core.Is;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 import uol.compass.school.Utils.JsonUtils;
+import uol.compass.school.Utils.OccurrenceUtils;
 import uol.compass.school.Utils.StudentUtils;
 import uol.compass.school.dto.request.StudentRequestDTO;
 import uol.compass.school.dto.response.MessageResponseDTO;
+import uol.compass.school.dto.response.OccurrenceDTO;
 import uol.compass.school.dto.response.StudentDTO;
 import uol.compass.school.service.StudentService;
 
 import java.util.Collections;
+import java.util.List;
 
-import static org.hamcrest.core.Is.*;
-import static org.mockito.Mockito.*;
+import static org.hamcrest.core.Is.is;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
 class
@@ -59,8 +59,8 @@ StudentControllerTest {
         when(studentService.create(expectedStudentRequestDTO)).thenReturn(expectedMessageResponse);
 
         mockMvc.perform(post("/api/v1/students")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtils.asJsonString(expectedStudentRequestDTO)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(JsonUtils.asJsonString(expectedStudentRequestDTO)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.message", is(expectedMessageResponse.getMessage())));
     }
@@ -122,6 +122,7 @@ StudentControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message", is(expectedMessageResponse.getMessage())));
     }
+
     @Test
     void whenDELETEIsCalledThenShouldReturnOKStatus() throws Exception {
         Long id = 1L;
@@ -138,4 +139,17 @@ StudentControllerTest {
                 .andExpect(jsonPath("$.message", is(expectedMessageResponse.getMessage())));
     }
 
+    @Test
+    void whenFindAllOccurrencesIsCalledThenShouldReturnOKStatus() throws Exception {
+        Long id = 1L;
+        OccurrenceDTO expectedOccurrencesDTO = OccurrenceUtils.createOccurrenceDTO();
+
+        when(studentService.findAllOccurrences(id, null, null)).thenReturn(Collections.singletonList(expectedOccurrencesDTO));
+
+        mockMvc.perform(get("/api/v1/students/1/occurrences")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id", is(expectedOccurrencesDTO.getId().intValue())))
+                .andExpect(jsonPath("$[0].description", is(expectedOccurrencesDTO.getDescription())));
+    }
 }

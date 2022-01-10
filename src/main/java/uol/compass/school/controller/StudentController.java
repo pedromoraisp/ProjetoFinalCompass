@@ -1,14 +1,17 @@
 package uol.compass.school.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import uol.compass.school.dto.request.StudentRequestDTO;
 import uol.compass.school.dto.response.MessageResponseDTO;
+import uol.compass.school.dto.response.OccurrenceDTO;
 import uol.compass.school.dto.response.StudentDTO;
 import uol.compass.school.service.StudentService;
 
 import javax.validation.Valid;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -46,5 +49,12 @@ public class StudentController {
     @DeleteMapping("/{id}")
     public MessageResponseDTO deleteById(@PathVariable Long id) {
         return this.studentService.deleteById(id);
+    }
+
+    @GetMapping("/{id}/occurrences")
+    public List<OccurrenceDTO> findAllOccurrences(@PathVariable Long id,
+                                                  @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate initialDate,
+                                                  @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate finalDate) {
+        return studentService.findAllOccurrences(id, initialDate, finalDate);
     }
 }

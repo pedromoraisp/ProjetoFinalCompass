@@ -51,5 +51,4 @@ public class ResponsibleController {
     public MessageResponseDTO deleteById(@PathVariable Long id) {
         return this.responsibleService.deleteById(id);
     }
-
 }

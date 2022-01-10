@@ -4,9 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import uol.compass.school.enums.CommunicationType;
-import uol.compass.school.enums.OccurrenceType;
+import org.hibernate.validator.constraints.br.CPF;
 
+import uol.compass.school.entity.Course;
+import uol.compass.school.enums.Gender;
+
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
@@ -15,17 +18,20 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class OccurrenceRequestDTO {
+public class EducatorRequestDTO {
 
-    @NotNull
-    private LocalDate date;
-
+	private Long Id;
+	
     @NotBlank
-    private String description;
+    private String name;
 
     @NotNull
-    private CommunicationType communicationType;
+    private Gender gender;
+
+    @CPF
+    private String cpf;
 
     @NotNull
-    private OccurrenceType occurrenceType;
+    private Course course;
+
 }
