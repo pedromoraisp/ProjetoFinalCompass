@@ -10,6 +10,7 @@ import uol.compass.school.enums.RelationshipType;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -66,4 +67,5 @@ public class Responsible {
             inverseJoinColumns = @JoinColumn(name = "student_id")
     )
     private Set<Student> students;
+
 }
