@@ -3,11 +3,13 @@ package uol.compass.school.Utils;
 import uol.compass.school.dto.request.ResponsibleRequestDTO;
 import uol.compass.school.dto.response.ResponsibleDTO;
 import uol.compass.school.entity.Responsible;
+import uol.compass.school.entity.Student;
 import uol.compass.school.enums.EducationalLevel;
 import uol.compass.school.enums.Gender;
 import uol.compass.school.enums.RelationshipType;
 
 import java.time.LocalDate;
+import java.util.Collections;
 
 public class ResponsibleUtils {
 
@@ -55,6 +57,20 @@ public class ResponsibleUtils {
                 .educationalLevel(EducationalLevel.INCOMPLETE_FUNDAMENTAL)
                 .relationshipType(RelationshipType.FATHER)
                 .profession("autonomo")
+                .build();
+    }
+
+    public static Responsible createResponsibleWithStudents() {
+        return Responsible.builder()
+                .id(1L)
+                .name("Pedro Henrique")
+                .gender(Gender.MALE)
+                .cpf("43236854677")
+                .identityCard("17333222")
+                .birthdate(LocalDate.now())
+                .address(AddressUtils.createAddress())
+                .educationalLevel(EducationalLevel.INCOMPLETE_FUNDAMENTAL)
+                .students(Collections.singleton(StudentUtils.createStudent()))
                 .build();
     }
 }

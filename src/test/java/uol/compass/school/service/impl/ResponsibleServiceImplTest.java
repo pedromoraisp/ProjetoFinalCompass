@@ -165,5 +165,20 @@ class ResponsibleServiceImplTest {
         assertThrows(ResponseStatusException.class, () -> responsibleService.deleteById(id));
     }
 
+//    @Test
+//    void FindAllFromResponsibleAndThenReturnAllStudents() {
+//        Long id = 1L;
+//        Responsible expectedResponsible = ResponsibleUtils.createResponsibleWithStudents();
+//        StudentDTO studentDTO = StudentUtils.createStudentDTO();
+//
+//        when(responsibleRepository.findById(id)).thenReturn(Optional.of(expectedResponsible));
+//        when(modelMapper.map(expectedResponsible.getStudents().get(0), OccurrenceDTO.class))
+//                .thenReturn(studentDTO);
+//
+//        Set<StudentDTO> allStudents = responsibleService.findAllStudents(id);
+//
+//        assertEquals(Collections.singleton(studentDTO), allStudents);;;
+//    }
+
 
 }

@@ -9,11 +9,16 @@ import org.springframework.web.server.ResponseStatusException;
 import uol.compass.school.dto.request.ResponsibleRequestDTO;
 import uol.compass.school.dto.response.MessageResponseDTO;
 import uol.compass.school.dto.response.ResponsibleDTO;
+import uol.compass.school.dto.response.StudentDTO;
 import uol.compass.school.entity.Responsible;
+import uol.compass.school.entity.Student;
 import uol.compass.school.repository.ResponsibleRepository;
 import uol.compass.school.service.ResponsibleService;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -95,5 +100,21 @@ public class ResponsibleServiceImpl implements ResponsibleService {
         return MessageResponseDTO.builder()
                 .message(String.format("Responsible with id %s was successfully deleted", id))
                 .build();
+    }
+
+    @Override
+    public Set<StudentDTO> findAllStudents(Long id) {
+        Set<Student> students;
+
+        Responsible responsible = this.responsibleRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Unable to find responsible with id %s", id)));
+
+        students = (responsible.getStudents() == null) ? new HashSet<>() : responsible.getStudents();
+
+
+        return students.stream().map(student -> modelMapper.map(student, StudentDTO.class))
+                    .collect(Collectors.toSet());
+
     }
 }

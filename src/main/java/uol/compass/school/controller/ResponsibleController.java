@@ -6,11 +6,13 @@ import org.springframework.web.bind.annotation.*;
 import uol.compass.school.dto.request.ResponsibleRequestDTO;
 import uol.compass.school.dto.response.MessageResponseDTO;
 import uol.compass.school.dto.response.ResponsibleDTO;
+import uol.compass.school.dto.response.StudentDTO;
 import uol.compass.school.service.ResponsibleService;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Set;
 
 
 @RestController
@@ -39,6 +41,11 @@ public class ResponsibleController {
     @GetMapping("/{id}")
     public ResponsibleDTO findById(@PathVariable Long id) {
         return this.responsibleService.findById(id);
+    }
+
+    @GetMapping("/{id}/students")
+    public Set<StudentDTO> findAllStudents(@PathVariable Long id) {
+        return responsibleService.findAllStudents(id);
     }
 
     @PutMapping("/{id}")
