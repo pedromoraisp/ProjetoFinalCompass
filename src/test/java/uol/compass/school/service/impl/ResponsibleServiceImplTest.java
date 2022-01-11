@@ -7,22 +7,16 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import org.springframework.web.server.ResponseStatusException;
-import uol.compass.school.Utils.OccurrenceUtils;
 import uol.compass.school.Utils.ResponsibleUtils;
-import uol.compass.school.Utils.StudentUtils;
 import uol.compass.school.dto.request.ResponsibleRequestDTO;
 import uol.compass.school.dto.response.MessageResponseDTO;
-import uol.compass.school.dto.response.OccurrenceDTO;
 import uol.compass.school.dto.response.ResponsibleDTO;
-import uol.compass.school.dto.response.StudentDTO;
 import uol.compass.school.entity.Responsible;
-import uol.compass.school.entity.Student;
 import uol.compass.school.repository.ResponsibleRepository;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -183,7 +177,7 @@ class ResponsibleServiceImplTest {
 //
 //        Set<StudentDTO> allStudents = responsibleService.findAllStudents(id);
 //
-//        assertEquals(Collections.singleton(studentDTO), allStudents);
+//        assertEquals(Collections.singleton(studentDTO), allStudents);;;
 //    }
 
 
