@@ -2,12 +2,13 @@ package uol.compass.school.dto.request;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+
 import org.hibernate.validator.constraints.br.CPF;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import uol.compass.school.entity.Course;
 import uol.compass.school.enums.Gender;
 
 @Data
@@ -27,7 +28,5 @@ public class EducatorRequestDTO {
     @CPF
     private String cpf;
 
-    @NotNull
-    private Course course;
 
 }
