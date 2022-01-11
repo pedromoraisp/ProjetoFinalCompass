@@ -23,13 +23,13 @@ public class OccurrenceController {
 	public OccurrenceController(OccurrenceService occurrenceService) {
 		this.occurrenceService = occurrenceService;
 	}
-//CRIAR UMA OCORRENCIA
+
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public MessageResponseDTO create(@RequestBody @Valid OccurrenceRequestDTO occurrenceRequestDTO) {
 		return this.occurrenceService.create(occurrenceRequestDTO);
 	}
-//LER
+
 	@GetMapping
 	public List<OccurrenceDTO> findAll(@RequestParam(required = false) @DateTimeFormat(iso=DateTimeFormat.ISO.DATE) LocalDate initialDate,
 									   @RequestParam(required = false) @DateTimeFormat(iso=DateTimeFormat.ISO.DATE) LocalDate finalDate) {
@@ -40,17 +40,17 @@ public class OccurrenceController {
 	public OccurrenceDTO findById(@PathVariable Long id) {
 		return this.occurrenceService.findById(id);
 	}
-//ATUALIZA
+
 	@PutMapping("/{id}")
 	public MessageResponseDTO update(@PathVariable Long id, @RequestBody OccurrenceRequestDTO occurrenceRequestDTO) {
 		return this.occurrenceService.update(id, occurrenceRequestDTO);
 	}
-//DELETAR OCORRENCIA
+
 	@DeleteMapping("/{id}")
 	public MessageResponseDTO deleteById(@PathVariable Long id) {
 		return this.occurrenceService.deleteById(id);
 	}
-//CRIAR
+
 	@PostMapping("/{occurrenceId}/students/{studentId}")
 	public MessageResponseDTO linkOccurrenceToStudent(@PathVariable Long occurrenceId, @PathVariable Long studentId) {
 		return occurrenceService.linkOccurrenceToStudent(occurrenceId, studentId);

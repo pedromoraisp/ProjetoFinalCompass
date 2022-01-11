@@ -8,9 +8,6 @@ import uol.compass.school.entity.Classroom;
 import uol.compass.school.entity.Course;
 import uol.compass.school.enums.Gender;
 
-import java.time.LocalDate;
-import java.util.Set;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
