@@ -1,14 +1,10 @@
 package uol.compass.school.service;
 
-import uol.compass.school.dto.request.EducatorRequestDTO;
-import uol.compass.school.dto.response.MessageResponseDTO;
-import uol.compass.school.dto.response.EducatorDTO;
-import uol.compass.school.dto.response.StudentDTO;
-import uol.compass.school.dto.response.EducatorDTO;
-import uol.compass.school.service.impl.EducatorServiceImpl;
-
-import java.time.LocalDate;
 import java.util.List;
+
+import uol.compass.school.dto.request.EducatorRequestDTO;
+import uol.compass.school.dto.response.EducatorDTO;
+import uol.compass.school.dto.response.MessageResponseDTO;
 
 public interface EducatorService {
 
@@ -22,6 +18,5 @@ public interface EducatorService {
 
     MessageResponseDTO deleteById(Long id);
 
-    //Fiquei na duvida se esta certo
-    List<EducatorDTO> findAllOccurrences(Long id, LocalDate initialDate, LocalDate finalDate);
+    
 }
