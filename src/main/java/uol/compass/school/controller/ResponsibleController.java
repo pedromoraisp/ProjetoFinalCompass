@@ -14,7 +14,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/api/v1/responsibles")
+@RequestMapping("/api/v1/responsible")
 public class ResponsibleController {
 
     private ResponsibleService responsibleService;
