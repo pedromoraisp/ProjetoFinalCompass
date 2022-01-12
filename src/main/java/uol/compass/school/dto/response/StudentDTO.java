@@ -10,6 +10,8 @@ import uol.compass.school.enums.EducationalLevel;
 import uol.compass.school.enums.Gender;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -40,5 +42,5 @@ public class StudentDTO {
 
     private Set<Responsible> responsible;
 
-    private Classroom classroom;
+    private List<ClassroomDTO> classrooms = new ArrayList<>();
 }

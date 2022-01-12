@@ -21,7 +21,6 @@ import uol.compass.school.dto.response.StudentDTO;
 import uol.compass.school.service.StudentService;
 
 import java.util.Collections;
-import java.util.List;
 
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.when;

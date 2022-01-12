@@ -2,6 +2,7 @@ package uol.compass.school.Utils;
 
 import uol.compass.school.dto.request.StudentRequestDTO;
 import uol.compass.school.dto.response.StudentDTO;
+import uol.compass.school.dto.response.StudentNameDTO;
 import uol.compass.school.entity.Student;
 import uol.compass.school.enums.EducationalLevel;
 import uol.compass.school.enums.Gender;
@@ -67,6 +68,13 @@ public class StudentUtils {
                 .educationalLevel(EducationalLevel.INCOMPLETE_FUNDAMENTAL)
                 .placeOfBirth("Bela Uberlândia")
                 .school("Escola Municipal de Bela Uberlândia")
+                .build();
+    }
+
+    public static StudentNameDTO createStudentNameDTO() {
+        return StudentNameDTO.builder()
+                .id(1L)
+                .name("Pedro Henrique")
                 .build();
     }
 }

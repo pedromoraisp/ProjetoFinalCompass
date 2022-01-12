@@ -36,7 +36,7 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public MessageResponseDTO create(StudentRequestDTO studentRequestDTO) {
         Student studentToSave = modelMapper.map(studentRequestDTO, Student.class);
-        Student savedStudent = this.studentRepository.save(studentToSave);
+        Student savedStudent = studentRepository.save(studentToSave);
 
         return MessageResponseDTO.builder()
                 .message(String.format("Student %s with id %s was successfully created", savedStudent.getName(), savedStudent.getId()))
@@ -45,13 +45,9 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public List<StudentDTO> findAll(String name) {
-        List<Student> students;
-
-        if (name == null) {
-            students = this.studentRepository.findAll();
-        } else {
-            students = this.studentRepository.findByNameStartingWith(name);
-        }
+        List<Student> students =
+                (name == null) ? studentRepository.findAll() : studentRepository.findByNameStartingWith(name);
+        System.out.println(students.get(0).getClassrooms());
 
         return students.stream()
                 .map(student -> modelMapper.map(student, StudentDTO.class)).collect(Collectors.toList());
@@ -59,37 +55,31 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public StudentDTO findById(Long id) {
-        Student student = this.studentRepository.findById(id)
-                .orElseThrow(() ->
-                        new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Unable to find student with id %s", id)));
+        Student student = checkIfStudentExists(id);
 
         return modelMapper.map(student, StudentDTO.class);
     }
 
     @Override
     public MessageResponseDTO update(Long id, StudentRequestDTO studentRequestDTO) {
-        Student student = this.studentRepository.findById(id)
-                .orElseThrow(() ->
-                        new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Unable to find student with id %s", id)));
+        checkIfStudentExists(id);
 
-        Student studentToSave = modelMapper.map(studentRequestDTO, Student.class);
-        studentToSave.setId(id);
+        Student studentToUpdate = modelMapper.map(studentRequestDTO, Student.class);
+        studentToUpdate.setId(id);
 
-        this.studentRepository.save(studentToSave);
+        Student updatedStudent = studentRepository.save(studentToUpdate);
 
         return MessageResponseDTO.builder()
-                .message(String.format("Student with id %s was successfully updated", student.getId()))
+                .message(String.format("Student with id %s was successfully updated", id))
                 .build();
     }
 
     @Transactional
     @Override
     public MessageResponseDTO deleteById(Long id) {
-        this.studentRepository.findById(id)
-                .orElseThrow(() ->
-                        new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Unable to find student with id %s", id)));
+        checkIfStudentExists(id);
 
-        this.studentRepository.deleteById(id);
+        studentRepository.deleteById(id);
 
         return MessageResponseDTO.builder()
                 .message(String.format("Student with id %s was successfully deleted", id))
@@ -100,9 +90,7 @@ public class StudentServiceImpl implements StudentService {
     public List<OccurrenceDTO> findAllOccurrences(Long id, LocalDate initialDate, LocalDate finalDate) {
         List<Occurrence> occurrences;
 
-        Student student = this.studentRepository.findById(id)
-                .orElseThrow(() ->
-                        new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Unable to find student with id %s", id)));
+        Student student = checkIfStudentExists(id);
 
         occurrences = (student.getOccurrences() == null) ? new ArrayList<>() : student.getOccurrences();
 
@@ -130,4 +118,9 @@ public class StudentServiceImpl implements StudentService {
                     .collect(Collectors.toList());
         }
     }
-}
+
+    private Student checkIfStudentExists(Long id) {
+        return studentRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Unable to find student with id %s", id)));
+    }}
