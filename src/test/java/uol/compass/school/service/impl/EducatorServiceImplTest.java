@@ -40,7 +40,7 @@ class EducatorServiceImplTest {
     	EducatorRequestDTO educatorRequestDTO = EducatorUtils.createEducatorRequestDTO();
     	Educator expectedEducator = EducatorUtils.createEducator();
         MessageResponseDTO expectedMessageResponse = MessageResponseDTO.builder()
-                .message("Educator Mariana with id 1 was successfully created")
+                .message("Educator Mariana Moreira with id 1 was successfully created")
                 .build();
 
         when(modelMapper.map(educatorRequestDTO, Educator.class)).thenReturn(expectedEducator);

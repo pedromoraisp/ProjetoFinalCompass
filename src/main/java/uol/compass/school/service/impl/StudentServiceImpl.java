@@ -47,7 +47,6 @@ public class StudentServiceImpl implements StudentService {
     public List<StudentDTO> findAll(String name) {
         List<Student> students =
                 (name == null) ? studentRepository.findAll() : studentRepository.findByNameStartingWith(name);
-        System.out.println(students.get(0).getClassrooms());
 
         return students.stream()
                 .map(student -> modelMapper.map(student, StudentDTO.class)).collect(Collectors.toList());
