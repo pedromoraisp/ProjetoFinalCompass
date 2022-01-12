@@ -21,7 +21,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -90,11 +91,11 @@ class StudentServiceImplTest {
 
         List<StudentDTO> studentsDTO = studentService.findAll(name);
 
-        assertEquals(studentsDTO.size(), 0);
+        assertEquals(0, studentsDTO.size());
     }
 
     @Test
-    void whenGivenAnIdThenShouldReturnAStudentWithThisId() {
+    void whenStudentIdIsInformedThenItShouldBeReturned() {
         Long id = 1L;
         Student expectedStudent = StudentUtils.createStudent();
         StudentDTO expectedStudentDTO = StudentUtils.createStudentDTO();
@@ -117,7 +118,7 @@ class StudentServiceImplTest {
     }
 
     @Test
-    void whenGivenAnIdThenShouldUpdateAStudent() {
+    void whenStudentIdIsInformedThenItShouldBeUpdated() {
         Long id = 1L;
         Student expectedStudent = StudentUtils.createStudent();
         StudentRequestDTO studentRequestDTO = StudentUtils.createStudentRequestDTO();
@@ -144,7 +145,7 @@ class StudentServiceImplTest {
     }
 
     @Test
-    void whenGivenAnIdThenShouldDeleteAStudent() {
+    void whenStudentIdIsInformedThenItShouldBeDeleted() {
         Long id = 1L;
         Student expectedStudent = StudentUtils.createStudent();
         MessageResponseDTO expectedMessageResponse = MessageResponseDTO.builder()
@@ -265,22 +266,5 @@ class StudentServiceImplTest {
                 LocalDate.of(2021, 12, 31));
 
         assertEquals(Collections.emptyList(), allOccurrences);
-    }
-
-    @Test
-    void whenFindAllOccurrencesIsCalledFromANonexistantStudentThenThrowResponseStatusException() {
-        Long id = 1L;
-
-        when(studentRepository.findById(id)).thenReturn(Optional.empty());
-
-        try {
-            studentService.findById(id);
-            fail();
-        } catch (ResponseStatusException exception) {
-            assertEquals("404 NOT_FOUND \"Unable to find student with id 1\"", exception.getMessage());
-        }
-
-
-        //assertThrows(ResponseStatusException.class, () -> studentService.findById(id), "Unable to find student with id 1");
     }
 }

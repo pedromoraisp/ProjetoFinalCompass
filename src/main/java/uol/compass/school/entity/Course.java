@@ -1,15 +1,15 @@
 package uol.compass.school.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -23,9 +23,8 @@ public class Course {
     private String name;
 
     @ManyToMany(mappedBy = "courses")
-    private List<Classroom> classrooms;
+    private Set<Classroom> classrooms = new HashSet<>();
 
     @OneToMany(mappedBy = "course")
     private List<Educator> educators;
-
 }

@@ -1,19 +1,18 @@
 package uol.compass.school.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import uol.compass.school.enums.EducationalLevel;
 import uol.compass.school.enums.Gender;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 @Entity
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -54,8 +53,8 @@ public class Student {
     @ManyToMany(mappedBy = "students")
     private Set<Responsible> responsible;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Classroom classroom;
+    @ManyToMany(mappedBy = "students")
+    private Set<Classroom> classrooms = new HashSet<>();
 
     @OneToMany(mappedBy = "student")
     private List<Occurrence> occurrences;
