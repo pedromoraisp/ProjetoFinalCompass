@@ -4,10 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import uol.compass.school.enums.Role;
 
-import javax.persistence.Column;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Data
 @AllArgsConstructor
@@ -22,14 +25,15 @@ public class UserRequestDTO {
 
     @NotBlank
     @Email
-    @Column(nullable = false, unique = true)
     private String email;
 
     @NotBlank
-    @Column(nullable = false, unique = true)
     private String username;
 
     @NotBlank
-    @Column(nullable = false)
     private String password;
+
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    private Role role;
 }
