@@ -19,5 +19,8 @@ public interface CourseService {
 
     MessageResponseDTO deleteById(Long id);
 
-    Set<CourseDTO> findAllCourses(Long id);
-}
+    MessageResponseDTO linkAEducator(Long courseId, Long educatorId);
+
+    MessageResponseDTO unlinkAEducator(Long courseId, Long educatorId);
+
+    }

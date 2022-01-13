@@ -50,4 +50,14 @@ public class CourseController {
         return this.courseService.deleteById(id);
     }
 
+    @PostMapping("/{courseId}/educators/{educatorId}")
+    public MessageResponseDTO linkAEducator(@PathVariable Long courseIdId, @PathVariable Long educatorId) {
+        return courseService.linkAEducator(courseIdId, educatorId);
+    }
+
+    @DeleteMapping("/{courseId}/educators/{educatorId}")
+    public MessageResponseDTO unlinkAEducator(@PathVariable Long courseIdId, @PathVariable Long educatorId) {
+        return courseService.unlinkAEducator(courseIdId, educatorId);
+    }
+
 }

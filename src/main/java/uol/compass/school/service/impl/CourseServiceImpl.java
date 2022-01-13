@@ -8,8 +8,11 @@ import org.springframework.web.server.ResponseStatusException;
 import uol.compass.school.dto.request.CourseRequestDTO;
 import uol.compass.school.dto.response.CourseDTO;
 import uol.compass.school.dto.response.MessageResponseDTO;
+import uol.compass.school.entity.Classroom;
 import uol.compass.school.entity.Course;
+import uol.compass.school.entity.Educator;
 import uol.compass.school.repository.CourseRepository;
+import uol.compass.school.repository.EducatorRepository;
 import uol.compass.school.service.CourseService;
 
 import java.util.List;
@@ -20,6 +23,8 @@ import java.util.stream.Collectors;
 public class CourseServiceImpl implements CourseService {
 
     private CourseRepository courseRepository;
+
+    private EducatorRepository educatorRepository;
 
     private ModelMapper modelMapper;
 
@@ -92,8 +97,47 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public Set<CourseDTO> findAllCourses(Long id) {
-        return null;
+    public MessageResponseDTO linkAEducator(Long courseId, Long educatorId) {
+        Course course = checkIfCourseExists(courseId);
+
+        Educator educator = educatorRepository.findById(educatorId)
+                .orElseThrow(() ->
+                        new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Unable to find educator with id %s", educatorId)));
+
+        if (!(course.getEducators() == null)) {
+            course.getEducators().add(educator);
+        }
+
+        courseRepository.save(course);
+
+        return MessageResponseDTO.builder()
+                .message(String.format("Course with id %s was linked to the educator with id %s successfully", course.getId(), educator.getId()))
+                .build();
+    }
+
+    @Override
+    public MessageResponseDTO unlinkAEducator(Long courseId, Long educatorId) {
+        Course course = checkIfCourseExists(courseId);
+
+        Educator educator = educatorRepository.findById(educatorId)
+                .orElseThrow(() ->
+                        new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Unable to find educator with id %s", educatorId)));
+
+        if (!(course.getEducators() == null)) {
+            course.getEducators().remove(educator);
+        }
+
+        courseRepository.save(course);
+
+        return MessageResponseDTO.builder()
+                .message(String.format("Course with id %s was unlinked to the educator with id %s successfully", course.getId(), educator.getId()))
+                .build();
+    }
+
+    private Course checkIfCourseExists(Long id) {
+        return courseRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Unable to find classroom with id %s", id)));
     }
 
 
