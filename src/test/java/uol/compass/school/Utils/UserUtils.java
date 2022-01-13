@@ -24,6 +24,7 @@ public class UserUtils {
                 .email("jennifer@email.com")
                 .username("jenniferuser")
                 .password("123456")
+                .role(Role.ADMIN)
                 .build();
     }
 }
