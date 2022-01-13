@@ -156,15 +156,15 @@ class ClassroomServiceImplTest {
         assertEquals(expectedMessageResponse, messageResponseDTO);
     }
 
-//    @Test
-//    void whenClassroomIdAndCourseIdAreInformedThenTheyShouldBeLinked() {
-//
-//    }
-//
-//    @Test
-//    void whenClassroomIdAndCourseIdAreInformedThenTheyShouldBeUnlinked() {
-//
-//    }
+    @Test
+    void whenClassroomIdAndCourseIdAreInformedThenTheyShouldBeLinked() {
+
+    }
+
+    @Test
+    void whenClassroomIdAndCourseIdAreInformedThenTheyShouldBeUnlinked() {
+
+    }
 
     @Test
     void whenClassroomIdAndStudentIdAreInformedThenTheyShouldBeLinked() {

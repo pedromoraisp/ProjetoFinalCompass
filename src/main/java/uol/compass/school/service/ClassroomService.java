@@ -2,6 +2,7 @@ package uol.compass.school.service;
 
 import uol.compass.school.dto.request.ClassroomRequestDTO;
 import uol.compass.school.dto.response.ClassroomDTO;
+import uol.compass.school.dto.response.CourseDTO;
 import uol.compass.school.dto.response.MessageResponseDTO;
 import uol.compass.school.dto.response.StudentNameDTO;
 
@@ -20,11 +21,11 @@ public interface ClassroomService {
 
     MessageResponseDTO delete(Long id);
 
-//    MessageResponseDTO linkACourse(Long classroomId, Long courseId);
-//
-//    MessageResponseDTO unlinkACourse(Long classroomId, Long courseId);
-//
-//    List<CoursesDTO> getAllCourses(Long id);
+    MessageResponseDTO linkACourse(Long classroomId, Long courseId);
+
+    MessageResponseDTO unlinkACourse(Long classroomId, Long courseId);
+
+    Set<CourseDTO> getAllCourses(Long id);
 
     MessageResponseDTO linkAStudent(Long classroomId, Long studentId);
 

@@ -75,7 +75,7 @@ public class EducatorServiceImpl implements EducatorService {
         this.educatorRepository.save(educatorToSave);
 
         return MessageResponseDTO.builder()
-                .message(String.format("educator with id %s was successfully updated", educator.getId()))
+                .message(String.format("Educator with id %s was successfully updated", educator.getId()))
                 .build();
     }
 

@@ -7,11 +7,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import uol.compass.school.dto.request.ClassroomRequestDTO;
 import uol.compass.school.dto.response.ClassroomDTO;
+import uol.compass.school.dto.response.CourseDTO;
 import uol.compass.school.dto.response.MessageResponseDTO;
 import uol.compass.school.dto.response.StudentNameDTO;
 import uol.compass.school.entity.Classroom;
+import uol.compass.school.entity.Course;
 import uol.compass.school.entity.Student;
 import uol.compass.school.repository.ClassroomRepository;
+import uol.compass.school.repository.CourseRepository;
 import uol.compass.school.repository.StudentRepository;
 import uol.compass.school.service.ClassroomService;
 
@@ -25,7 +28,7 @@ public class ClassroomServiceImpl implements ClassroomService {
 
     private ClassroomRepository classroomRepository;
 
-    //private CourseRepository courseRepository;
+    private CourseRepository courseRepository;
 
     private StudentRepository studentRepository;
 
@@ -92,46 +95,52 @@ public class ClassroomServiceImpl implements ClassroomService {
                 .build();
     }
 
-//    @Override
-//    public MessageResponseDTO linkACourse(Long classroomId, Long courseId) {
-//        Classroom classroom = checkIfClassroomExists(classroomId);
-//
-//        Course course = courseRepository.findById(courseId)
-//                .orElseThrow(() ->
-//                        new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Unable to find course with id %s", courseId)));
-//
-//        classroom.getCourses().add(course);
-//
-//        classroomRepository.save(classroom);
-//
-//        return MessageResponseDTO.builder()
-//                .message(String.format("Classroom with id %s was linked to the course with id %s successfully", classroom.getId(), course.getId()))
-//                .build();
-//    }
-//
-//    @Override
-//    public MessageResponseDTO unlinkACourse(Long classroomId, Long courseId) {
-//        Classroom classroom = checkIfClassroomExists(classroomId);
-//
-//        Course course = courseRepository.findById(courseId)
-//                .orElseThrow(() ->
-//                        new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Unable to find course with id %s", courseId)));
-//
-//        classroom.getCourses().remove(course);
-//
-//        classroomRepository.save(classroom);
-//
-//        return MessageResponseDTO.builder()
-//                .message(String.format("Classroom with id %s was unlinked to the course with id %s successfully", classroom.getId(), course.getId()))
-//                .build();
-//    }
-//
-//      @Override
-//      public Set<CoursesDTO> getAllCourses(Long id) {
-//          Classroom classroom = checkIfClassroomExists(id);
-//
-//        return classroom.getCourses.stream().map(course -> modelMapper.map(course, CourseDTO.class)).collect(Collectors.toSet());
-//    }
+    @Override
+    public MessageResponseDTO linkACourse(Long classroomId, Long courseId) {
+        Classroom classroom = checkIfClassroomExists(classroomId);
+
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() ->
+                        new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Unable to find course with id %s", courseId)));
+
+        if (!(classroom.getStudents() == null)) {
+            classroom.getCourses().add(course);
+        }
+        classroomRepository.save(classroom);
+
+        return MessageResponseDTO.builder()
+                .message(String.format("Classroom with id %s was linked to the course with id %s successfully", classroom.getId(), course.getId()))
+                .build();
+    }
+
+    @Override
+    public MessageResponseDTO unlinkACourse(Long classroomId, Long courseId) {
+        Classroom classroom = checkIfClassroomExists(classroomId);
+
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() ->
+                        new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Unable to find course with id %s", courseId)));
+
+        if (!(classroom.getStudents() == null)) {
+            classroom.getCourses().remove(course);
+        }
+        classroomRepository.save(classroom);
+
+        return MessageResponseDTO.builder()
+                .message(String.format("Classroom with id %s was unlinked to the course with id %s successfully", classroom.getId(), course.getId()))
+                .build();
+    }
+
+      @Override
+      public Set<CourseDTO> getAllCourses(Long id) {
+          Classroom classroom = checkIfClassroomExists(id);
+
+          if (!(classroom.getStudents() == null)) {
+              return classroom.getCourses().stream().map(course -> modelMapper.map(course, CourseDTO.class)).collect(Collectors.toSet());
+          } else {
+              return new HashSet<>();
+          }
+    }
 
     @Override
     public MessageResponseDTO linkAStudent(Long classroomId, Long studentId) {

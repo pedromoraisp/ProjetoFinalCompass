@@ -29,7 +29,7 @@ public class EducatorUtils {
         return EducatorRequestDTO.builder()
         		.name("Mariana Moreira")
                 .gender(Gender.FEMALE)
-                .cpf("53236854690")
+                .cpf("566.748.876-09")
                 .build();
     }
 }
