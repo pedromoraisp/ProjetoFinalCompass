@@ -1,4 +1,4 @@
-package uol.compass.school.config;
+package uol.compass.school.security.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
