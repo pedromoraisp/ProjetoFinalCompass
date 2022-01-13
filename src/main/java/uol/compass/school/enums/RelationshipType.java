@@ -1,9 +1,15 @@
 package uol.compass.school.enums;
 
-public enum RelationshipType {
-    FATHER,
-    MOTHER,
-    LEGAL_RESPONSIBLE
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
+@Getter
+@AllArgsConstructor
+public enum RelationshipType {
+    FATHER("Father"),
+    MOTHER("Mother"),
+    LEGAL_RESPONSIBLE("Legal Responsible");
+
+    private String description;
 }
 

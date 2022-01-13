@@ -1,7 +1,13 @@
 package uol.compass.school.enums;
 
-public enum Gender {
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
-    MALE,
-    FEMALE
+@Getter
+@AllArgsConstructor
+public enum Gender {
+    MALE("Male"),
+    FEMALE("Female");
+
+    private String description;
 }
