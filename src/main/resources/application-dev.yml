@@ -19,3 +19,7 @@ logging:
     com:
       example:
         bookstoremanager: DEBUG
+
+jwt:
+  secret: school
+  validity: 18000
