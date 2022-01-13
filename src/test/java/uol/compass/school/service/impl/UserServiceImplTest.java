@@ -6,6 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.server.ResponseStatusException;
 import uol.compass.school.Utils.UserUtils;
 import uol.compass.school.dto.request.UserRequestDTO;
@@ -27,6 +28,9 @@ class UserServiceImplTest {
     private UserRepository userRepository;
 
     @Mock
+    private PasswordEncoder passwordEncoder;
+
+    @Mock
     private ModelMapper modelMapper;
 
     @InjectMocks
@@ -41,6 +45,7 @@ class UserServiceImplTest {
         when(userRepository.findByEmailOrUsername(userRequestDTO.getEmail(), userRequestDTO.getUsername()))
                 .thenReturn(Optional.empty());
         when(modelMapper.map(userRequestDTO, User.class)).thenReturn(user);
+        when(passwordEncoder.encode(user.getPassword())).thenReturn(user.getPassword());
         when(userRepository.save(user)).thenReturn(user);
 
         MessageResponseDTO messageResponseDTO = userService.create(userRequestDTO);
@@ -60,29 +65,6 @@ class UserServiceImplTest {
     }
 
     @Test
-    void whenUserIsInformedThenItShouldBeDeleted() {
-        Long id = 1L;
-        User user = UserUtils.createUser();
-
-        when(userRepository.findById(id)).thenReturn(Optional.of(user));
-        doNothing().when(userRepository).deleteById(id);
-
-        userService.delete(id);
-
-        verify(userRepository, times(1)).deleteById(id);
-    }
-
-    @Test
-    void whenUserIsInformedThenItShouldReturnAnException() {
-        Long id = 1L;
-        User user = UserUtils.createUser();
-
-        when(userRepository.findById(id)).thenReturn(Optional.empty());
-
-        assertThrows(ResponseStatusException.class, () -> userService.delete(id));
-    }
-
-    @Test
     void whenUserIsInformedThenItShouldBeUpdated() {
         Long id = 1L;
         UserRequestDTO userRequestDTO = UserUtils.createUserRequestDTO();
@@ -91,6 +73,7 @@ class UserServiceImplTest {
 
         when(userRepository.findById(id)).thenReturn(Optional.of(user));
         when(modelMapper.map(userRequestDTO, User.class)).thenReturn(user);
+        when(passwordEncoder.encode(user.getPassword())).thenReturn(user.getPassword());
         when(userRepository.save(user)).thenReturn(user);
 
         MessageResponseDTO messageResponseDTO = userService.update(id, userRequestDTO);
@@ -106,5 +89,28 @@ class UserServiceImplTest {
         when(userRepository.findById(id)).thenReturn(Optional.empty());
 
         assertThrows(ResponseStatusException.class, () -> userService.update(id, userRequestDTO));
+    }
+
+    @Test
+    void whenUserIsInformedThenItShouldBeDeleted() {
+        Long id = 1L;
+        User user = UserUtils.createUser();
+
+        when(userRepository.findById(id)).thenReturn(Optional.of(user));
+        doNothing().when(userRepository).deleteById(id);
+
+        userService.delete(id);
+
+        verify(userRepository, times(1)).deleteById(id);
+    }
+
+    @Test
+    void whenUserIsInformedToDeleteThenItShouldReturnAnException() {
+        Long id = 1L;
+        User user = UserUtils.createUser();
+
+        when(userRepository.findById(id)).thenReturn(Optional.empty());
+
+        assertThrows(ResponseStatusException.class, () -> userService.delete(id));
     }
 }

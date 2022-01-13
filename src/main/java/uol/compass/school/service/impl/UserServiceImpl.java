@@ -3,6 +3,7 @@ package uol.compass.school.service.impl;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import uol.compass.school.dto.request.UserRequestDTO;
@@ -19,11 +20,14 @@ public class UserServiceImpl implements UserService {
 
     private UserRepository userRepository;
 
+    private PasswordEncoder passwordEncoder;
+
     private ModelMapper modelMapper;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, ModelMapper modelMapper) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
         this.modelMapper = modelMapper;
     }
 
@@ -32,6 +36,8 @@ public class UserServiceImpl implements UserService {
         verifyIfUsernameExists(userRequestDTO.getEmail(), userRequestDTO.getUsername());
 
         User userToSave = modelMapper.map(userRequestDTO, User.class);
+        userToSave.setPassword(passwordEncoder.encode(userToSave.getPassword()));
+
         User savedUser = userRepository.save(userToSave);
 
         return MessageResponseDTO.builder()
@@ -45,6 +51,8 @@ public class UserServiceImpl implements UserService {
         userRequestDTO.setId(user.getId());
 
         User userToUpdate = modelMapper.map(userRequestDTO, User.class);
+        userToUpdate.setPassword(passwordEncoder.encode(userToUpdate.getPassword()));
+
         User updatedUser = userRepository.save(userToUpdate);
 
         return MessageResponseDTO.builder()
