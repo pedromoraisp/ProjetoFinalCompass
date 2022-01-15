@@ -34,4 +34,8 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @MapsId
+    private Responsible responsible;
 }

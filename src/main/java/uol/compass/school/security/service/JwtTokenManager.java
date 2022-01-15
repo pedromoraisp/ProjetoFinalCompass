@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+// Classe para gerenciar os tokens JWT
 @Component
 public class JwtTokenManager {
 
@@ -26,24 +27,10 @@ public class JwtTokenManager {
         this.secret = secret;
     }
 
-
-    public String getUsernameFromToken(String token) {
-        return getClaimForToken(token, Claims::getSubject);
-    }
-
-    public Date getExpirationDateFromToken(String token) {
-        return getClaimForToken(token, Claims::getExpiration);
-    }
-
     // Método para geração de token
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
         return doGenerateToken(claims, userDetails.getUsername());
-    }
-
-    public <T> T getClaimForToken(String token, Function<Claims, T> claimsResolver) {
-        Claims claims = getAllClaimsFromToken(token);
-        return claimsResolver.apply(claims);
     }
 
     // Método para validar o token
@@ -52,6 +39,22 @@ public class JwtTokenManager {
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
+    // Método para capturar o username contido no token
+    public String getUsernameFromToken(String token) {
+        return getClaimForToken(token, Claims::getSubject);
+    }
+
+    // Método para capturar a expiração contida no token
+    public Date getExpirationDateFromToken(String token) {
+        return getClaimForToken(token, Claims::getExpiration);
+    }
+
+    public <T> T getClaimForToken(String token, Function<Claims, T> claimsResolver) {
+        Claims claims = getAllClaimsFromToken(token);
+        return claimsResolver.apply(claims);
+    }
+
+    // Método para verificar a validade do token
     private boolean isTokenExpired(String token) {
         Date expirationDate = getExpirationDateFromToken(token);
         return expirationDate.before(new Date());

@@ -3,6 +3,8 @@ package uol.compass.school.service.impl;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
@@ -10,9 +12,11 @@ import uol.compass.school.dto.request.StudentRequestDTO;
 import uol.compass.school.dto.response.MessageResponseDTO;
 import uol.compass.school.dto.response.OccurrenceDTO;
 import uol.compass.school.dto.response.StudentDTO;
+import uol.compass.school.dto.response.StudentOccurrenceDTO;
 import uol.compass.school.entity.Occurrence;
 import uol.compass.school.entity.Student;
 import uol.compass.school.repository.StudentRepository;
+import uol.compass.school.repository.UserRepository;
 import uol.compass.school.service.StudentService;
 
 import java.time.LocalDate;
@@ -25,11 +29,14 @@ public class StudentServiceImpl implements StudentService {
 
     private StudentRepository studentRepository;
 
+    private UserRepository userRepository;
+
     private ModelMapper modelMapper;
 
     @Autowired
-    public StudentServiceImpl(StudentRepository studentRepository, ModelMapper modelMapper) {
+    public StudentServiceImpl(StudentRepository studentRepository, UserRepository userRepository, ModelMapper modelMapper) {
         this.studentRepository = studentRepository;
+        this.userRepository = userRepository;
         this.modelMapper = modelMapper;
     }
 
@@ -116,6 +123,27 @@ public class StudentServiceImpl implements StudentService {
             return filteredOccurrences.stream().map(occurrence -> modelMapper.map(occurrence, OccurrenceDTO.class))
                     .collect(Collectors.toList());
         }
+    }
+
+    @Override
+    public List<StudentOccurrenceDTO> getOccurrencesFromStudentsLinkedToUser() {
+        String loggedUsername = getLoggedUsername();
+
+        return null;
+    }
+
+    private String getLoggedUsername() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        String username;
+
+        if (principal instanceof UserDetails) {
+            username = ((UserDetails)principal).getUsername();
+        } else {
+            username = principal.toString();
+        }
+
+        return username;
     }
 
     private Student checkIfStudentExists(Long id) {

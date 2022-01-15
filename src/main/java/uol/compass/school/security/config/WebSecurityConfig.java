@@ -3,15 +3,19 @@ package uol.compass.school.security.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import uol.compass.school.enums.Role;
 
 @Configuration
@@ -25,43 +29,33 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private static final String EDUCATORS_API_URL = "/api/v1/educators/**";
     private static final String OCCURRENCES_API_URL = "/api/v1/occurrences/**";
     private static final String RESPONSIBLE_API_URL = "/api/v1/responsible/**";
-    private static final String STUDENT_API_URL = "/api/v1/students/**";
-
-    private static final String SWAGGER_URL = "/swagger-ui.html";
 
     private static final String H2_CONSOLE_URL = "/h2-console/**";
 
     private static final String ROLE_ADMIN = Role.ADMIN.getDescription();
-    private static final String ROLE_EDUCATOR = Role.EDUCATOR.getDescription();
     private static final String ROLE_RESPONSIBLE = Role.RESPONSIBLE.getDescription();
 
-    private static final String[] SWAGGER_RESOURCES = {
-            // -- swagger ui
-            "/v2/api-docs",
-            "/swagger-resources",
-            "/swagger-resources/**",
-            "/configuration/ui",
-            "/configuration/security",
-            "/swagger-ui.html",
-            "/webjars/**"
-    };
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
-    private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final UserDetailsService userDetailsService;
 
-    private UserDetailsService userDetailsService;
-
-    private PasswordEncoder passwordEncoder;
+    private final JwtRequestFilter jwtRequestFilter;
 
     @Autowired
-    public WebSecurityConfig(JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint, UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
+    public WebSecurityConfig(JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint, UserDetailsService userDetailsService, JwtRequestFilter jwtRequestFilter) {
         this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
         this.userDetailsService = userDetailsService;
-        this.passwordEncoder = passwordEncoder;
+        this.jwtRequestFilter = jwtRequestFilter;
     }
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
+        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
     // Return AuthenticationManager implementation
@@ -74,8 +68,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
-                .authorizeRequests().antMatchers(USERS_API_URL, SWAGGER_URL).permitAll()
-                .antMatchers(CLASSROOMS_API_URL, COURSES_API_URL, EDUCATORS_API_URL, OCCURRENCES_API_URL, RESPONSIBLE_API_URL, STUDENT_API_URL).hasAnyRole(ROLE_ADMIN)
+                .authorizeRequests().antMatchers(USERS_API_URL, H2_CONSOLE_URL).permitAll()
+                .antMatchers(CLASSROOMS_API_URL, COURSES_API_URL, EDUCATORS_API_URL, OCCURRENCES_API_URL, RESPONSIBLE_API_URL).hasRole(ROLE_ADMIN)
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
@@ -83,5 +77,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.headers().frameOptions().disable();
+        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }

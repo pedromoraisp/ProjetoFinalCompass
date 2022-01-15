@@ -63,4 +63,14 @@ public class ControllerExceptionHandler {
                 .message(exception.getMessage())
                 .build();
     }
+
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorMessageDTO handleUserAlreadyExistsException(UserAlreadyExistsException exception) {
+        return ErrorMessageDTO.builder()
+                .status(HttpStatus.BAD_REQUEST)
+                .timestamp(LocalDateTime.now())
+                .message(exception.getMessage())
+                .build();
+    }
 }

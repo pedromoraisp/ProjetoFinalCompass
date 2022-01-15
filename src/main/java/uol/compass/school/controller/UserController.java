@@ -5,6 +5,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import uol.compass.school.dto.request.UserRequestDTO;
 import uol.compass.school.dto.response.MessageResponseDTO;
+import uol.compass.school.security.dto.JwtRequest;
+import uol.compass.school.security.dto.JwtResponse;
+import uol.compass.school.security.service.AuthenticationService;
 import uol.compass.school.service.UserService;
 
 import javax.validation.Valid;
@@ -15,9 +18,12 @@ public class UserController {
 
     private UserService userService;
 
+    private AuthenticationService authenticationService;
+
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, AuthenticationService authenticationService) {
         this.userService = userService;
+        this.authenticationService = authenticationService;
     }
 
     @PostMapping
@@ -35,5 +41,10 @@ public class UserController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
         userService.delete(id);
+    }
+
+    @PostMapping(value = "/authenticate")
+    public JwtResponse createAuthenticationToken(@RequestBody @Valid JwtRequest jwtRequest) {
+        return authenticationService.createAuthenticationToken(jwtRequest);
     }
 }

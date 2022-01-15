@@ -11,9 +11,13 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
+import uol.compass.school.Utils.JwtDTOUtils;
 import uol.compass.school.Utils.UserUtils;
 import uol.compass.school.dto.request.UserRequestDTO;
 import uol.compass.school.dto.response.MessageResponseDTO;
+import uol.compass.school.security.dto.JwtRequest;
+import uol.compass.school.security.dto.JwtResponse;
+import uol.compass.school.security.service.AuthenticationService;
 import uol.compass.school.service.UserService;
 
 import static org.hamcrest.Matchers.is;
@@ -31,6 +35,9 @@ class UserControllerTest {
 
     @Mock
     private UserService userService;
+
+    @Mock
+    private AuthenticationService authenticationService;
 
     @InjectMocks
     private UserController userController;
@@ -96,5 +103,30 @@ class UserControllerTest {
         mockMvc.perform(delete("/api/v1/users/" + id)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void whenPOSTIdCalledToAuthenticationServiceThenOKStatus() throws Exception {
+        JwtRequest jwtRequest = JwtDTOUtils.createJwtRequest();
+        JwtResponse jwtResponse = JwtDTOUtils.createJwtResponse();
+
+        when(authenticationService.createAuthenticationToken(jwtRequest)).thenReturn(jwtResponse);
+
+        mockMvc.perform(post("/api/v1/users/authenticate")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(jwtRequest)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.jwtToken", is(jwtResponse.getJwtToken())));
+    }
+
+    @Test
+    void whenPOSTIdCalledToAuthenticationServiceWithIncorrectFieldsThenBadRequestStatus() throws Exception {
+        JwtRequest jwtRequest = JwtDTOUtils.createJwtRequest();
+        jwtRequest.setPassword(null);
+
+        mockMvc.perform(post("/api/v1/users/authenticate")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(jwtRequest)))
+                .andExpect(status().isBadRequest());
     }
 }
