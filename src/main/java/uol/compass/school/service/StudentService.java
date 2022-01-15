@@ -8,6 +8,7 @@ import uol.compass.school.dto.response.StudentOccurrenceDTO;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 public interface StudentService {
 
@@ -23,5 +24,5 @@ public interface StudentService {
 
     List<OccurrenceDTO> findAllOccurrences(Long id, LocalDate initialDate, LocalDate finalDate);
 
-    List<StudentOccurrenceDTO> getOccurrencesFromStudentsLinkedToUser();
+    Set<StudentOccurrenceDTO> getOccurrencesFromStudentsLinkedToUser();
 }

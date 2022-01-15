@@ -9,12 +9,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import uol.compass.school.dto.request.StudentRequestDTO;
-import uol.compass.school.dto.response.MessageResponseDTO;
-import uol.compass.school.dto.response.OccurrenceDTO;
-import uol.compass.school.dto.response.StudentDTO;
-import uol.compass.school.dto.response.StudentOccurrenceDTO;
+import uol.compass.school.dto.response.*;
 import uol.compass.school.entity.Occurrence;
 import uol.compass.school.entity.Student;
+import uol.compass.school.entity.User;
 import uol.compass.school.repository.StudentRepository;
 import uol.compass.school.repository.UserRepository;
 import uol.compass.school.service.StudentService;
@@ -22,6 +20,8 @@ import uol.compass.school.service.StudentService;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -126,22 +126,28 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public List<StudentOccurrenceDTO> getOccurrencesFromStudentsLinkedToUser() {
+    public Set<StudentOccurrenceDTO> getOccurrencesFromStudentsLinkedToUser() {
         String loggedUsername = getLoggedUsername();
 
+        Optional<User> user = userRepository.findByUsername(loggedUsername);
+        if(user.isPresent()) {
+            Set<Student> students = user.get().getResponsible().getStudents();
+            return students.stream().map(student -> {
+                StudentOccurrenceDTO studentOccurrenceDTO = modelMapper.map(student, StudentOccurrenceDTO.class);
+                List<OccurrenceToStudentDTO> occurrenceDTO = student.getOccurrences().stream().map(
+                        occurrence -> modelMapper.map(occurrence, OccurrenceToStudentDTO.class)).collect(Collectors.toList());
+                studentOccurrenceDTO.setOccurrences(occurrenceDTO);
+                return studentOccurrenceDTO;
+            }).collect(Collectors.toSet());
+        }
         return null;
     }
 
     private String getLoggedUsername() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        String username;
-
-        if (principal instanceof UserDetails) {
-            username = ((UserDetails)principal).getUsername();
-        } else {
-            username = principal.toString();
-        }
+        String username =
+                (principal instanceof UserDetails) ? ((UserDetails)principal).getUsername() : principal.toString();
 
         return username;
     }

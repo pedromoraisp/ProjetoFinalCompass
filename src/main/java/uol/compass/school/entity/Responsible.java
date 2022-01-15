@@ -30,9 +30,11 @@ public class Responsible {
     @Column(nullable = false)
     private String cpf;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private RelationshipType relationshipType;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Gender gender;
 
@@ -68,4 +70,6 @@ public class Responsible {
     )
     private Set<Student> students;
 
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private User user;
 }

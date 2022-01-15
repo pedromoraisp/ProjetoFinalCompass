@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import uol.compass.school.entity.Occurrence;
 
 import java.util.List;
 
@@ -18,5 +17,5 @@ public class StudentOccurrenceDTO {
 
     private String name;
 
-    private List<Occurrence> occurrences;
+    private List<OccurrenceToStudentDTO> occurrences;
 }

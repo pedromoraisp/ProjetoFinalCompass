@@ -17,6 +17,7 @@ import uol.compass.school.service.StudentService;
 import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/v1/students")
@@ -66,9 +67,7 @@ public class StudentController {
 
     @PreAuthorize("hasRole('RESPONSIBLE')")
     @GetMapping("/occurrences")
-    public List<StudentOccurrenceDTO> getOccurrencesFromStudentsLinkedToUser() {
-
-
-        return null;
+    public Set<StudentOccurrenceDTO> getOccurrencesFromStudentsLinkedToUser() {
+        return studentService.getOccurrencesFromStudentsLinkedToUser();
     }
 }

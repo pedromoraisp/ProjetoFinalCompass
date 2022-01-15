@@ -35,7 +35,6 @@ public class User {
     @Column(nullable = false)
     private Role role;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @MapsId
+    @OneToOne(mappedBy = "user")
     private Responsible responsible;
 }
