@@ -1,5 +1,6 @@
 package uol.compass.school.service.impl;
 
+import net.bytebuddy.implementation.bytecode.Throw;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -68,9 +69,7 @@ public class ClassroomServiceImpl implements ClassroomService {
 
     @Override
     public MessageResponseDTO update(Long id, ClassroomRequestDTO classroomRequestDTO) {
-        classroomRepository.findById(id)
-                .orElseThrow(() ->
-                        new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Unable to find classroom with id %s", id)));
+        checkIfClassroomExists(id);
 
         Classroom classroomToUpdate = modelMapper.map(classroomRequestDTO, Classroom.class);
         classroomToUpdate.setId(id);
@@ -84,9 +83,7 @@ public class ClassroomServiceImpl implements ClassroomService {
 
     @Override
     public MessageResponseDTO delete(Long id) {
-        classroomRepository.findById(id)
-                .orElseThrow(() ->
-                        new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Unable to find classroom with id %s", id)));
+        checkIfClassroomExists(id);
 
         classroomRepository.deleteById(id);
 
@@ -99,13 +96,12 @@ public class ClassroomServiceImpl implements ClassroomService {
     public MessageResponseDTO linkACourse(Long classroomId, Long courseId) {
         Classroom classroom = checkIfClassroomExists(classroomId);
 
-        Course course = courseRepository.findById(courseId)
-                .orElseThrow(() ->
-                        new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Unable to find course with id %s", courseId)));
+        Course course = checkIfCourseExists(courseId);
 
-        if (!(classroom.getStudents() == null)) {
-            classroom.getCourses().add(course);
-        }
+        Set<Course> courses = new HashSet<>(classroom.getCourses());
+        courses.add(course);
+        classroom.setCourses(courses);
+
         classroomRepository.save(classroom);
 
         return MessageResponseDTO.builder()
@@ -117,13 +113,17 @@ public class ClassroomServiceImpl implements ClassroomService {
     public MessageResponseDTO unlinkACourse(Long classroomId, Long courseId) {
         Classroom classroom = checkIfClassroomExists(classroomId);
 
-        Course course = courseRepository.findById(courseId)
-                .orElseThrow(() ->
-                        new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Unable to find course with id %s", courseId)));
+        Course course = checkIfCourseExists(courseId);
 
-        if (!(classroom.getStudents() == null)) {
-            classroom.getCourses().remove(course);
+        if(classroom.getCourses().contains(course)){
+            Set<Course> courses = new HashSet<>(classroom.getCourses());
+            courses.remove(course);
+            classroom.setCourses(courses);
+        } else {
+            new ResponseStatusException(HttpStatus.NOT_FOUND, "This course is not linked to the class");
         }
+
+
         classroomRepository.save(classroom);
 
         return MessageResponseDTO.builder()
@@ -146,13 +146,11 @@ public class ClassroomServiceImpl implements ClassroomService {
     public MessageResponseDTO linkAStudent(Long classroomId, Long studentId) {
         Classroom classroom = checkIfClassroomExists(classroomId);
 
-        Student student = studentRepository.findById(studentId)
-                .orElseThrow(() ->
-                        new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Unable to find student with id %s", studentId)));
+        Student student = checkIfStudentExists(studentId);
 
-        if (!(classroom.getStudents() == null)) {
-            classroom.getStudents().add(student);
-        }
+        Set<Student> students = new HashSet<>(classroom.getStudents());
+        students.add(student);
+        classroom.setStudents(students);
 
         classroomRepository.save(classroom);
 
@@ -165,9 +163,7 @@ public class ClassroomServiceImpl implements ClassroomService {
     public MessageResponseDTO unlinkAStudent(Long classroomId, Long studentId) {
         Classroom classroom = checkIfClassroomExists(classroomId);
 
-        Student student = studentRepository.findById(studentId)
-                .orElseThrow(() ->
-                        new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Unable to find student with id %s", studentId)));
+        Student student = checkIfStudentExists(studentId);
 
         if (!(classroom.getStudents() == null)) {
             classroom.getStudents().remove(student);
@@ -195,5 +191,17 @@ public class ClassroomServiceImpl implements ClassroomService {
         return classroomRepository.findById(id)
                 .orElseThrow(() ->
                         new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Unable to find classroom with id %s", id)));
+    }
+
+    private Course checkIfCourseExists(Long courseId) {
+        return courseRepository.findById(courseId)
+                .orElseThrow(() ->
+                        new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Unable to find course with id %s", courseId)));
+    }
+
+    private Student checkIfStudentExists(Long studentId) {
+        return studentRepository.findById(studentId)
+                .orElseThrow(() ->
+                        new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Unable to find student with id %s", studentId)));
     }
 }

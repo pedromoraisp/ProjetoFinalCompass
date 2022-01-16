@@ -13,12 +13,15 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 import uol.compass.school.Utils.ClassroomUtils;
 import uol.compass.school.Utils.JsonUtils;
+import uol.compass.school.Utils.StudentUtils;
 import uol.compass.school.dto.request.ClassroomRequestDTO;
 import uol.compass.school.dto.response.ClassroomDTO;
 import uol.compass.school.dto.response.MessageResponseDTO;
+import uol.compass.school.dto.response.StudentNameDTO;
 import uol.compass.school.service.ClassroomService;
 
 import java.util.Collections;
+import java.util.Set;
 
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.when;
@@ -131,5 +134,50 @@ class ClassroomControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message", is(expectedMessageResponse.getMessage())));
+    }
+
+    @Test
+    void whenPOSTToLinkAStudentIsCalledThenReturnOKStatus() throws Exception {
+        Long studentId = 1L;
+        Long classroomId = 1L;
+        MessageResponseDTO expectedMessageResponse = MessageResponseDTO.builder()
+                .message("Classroom with id 1 was linked to the student with id 1 successfully")
+                .build();
+
+        when(classroomService.linkAStudent(classroomId, studentId)).thenReturn(expectedMessageResponse);
+
+        mockMvc.perform(post("/api/v1/classrooms/"+ classroomId +"/students/" + studentId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message", is(expectedMessageResponse.getMessage())));
+    }
+
+    @Test
+    void whenPOSTToUnlinkAStudentIsCalledThenReturnOKStatus() throws Exception {
+        Long studentId = 1L;
+        Long classroomId = 1L;
+        MessageResponseDTO expectedMessageResponse = MessageResponseDTO.builder()
+                .message("Classroom with id 1 was unlinked to the student with id 1 successfully")
+                .build();
+
+        when(classroomService.unlinkAStudent(classroomId, studentId)).thenReturn(expectedMessageResponse);
+
+        mockMvc.perform(delete("/api/v1/classrooms/"+ classroomId +"/students/" + studentId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message", is(expectedMessageResponse.getMessage())));
+    }
+
+    @Test
+    void whenGETToGetAllStudentsIsCalledThenReturnOKStatus() throws Exception {
+        Long id = 1L;
+        StudentNameDTO studentNameDTO = StudentUtils.createStudentNameDTO();
+
+        when(classroomService.getAllStudents(id)).thenReturn(Collections.singleton(studentNameDTO));
+
+        mockMvc.perform(get("/api/v1/classrooms/"+ id +"/students")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.[0]name", is(studentNameDTO.getName())));
     }
 }
