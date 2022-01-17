@@ -2,6 +2,7 @@ package uol.compass.school.Utils;
 
 import uol.compass.school.dto.request.OccurrenceRequestDTO;
 import uol.compass.school.dto.response.OccurrenceDTO;
+import uol.compass.school.dto.response.OccurrenceToStudentDTO;
 import uol.compass.school.entity.Occurrence;
 import uol.compass.school.enums.CommunicationType;
 import uol.compass.school.enums.OccurrenceType;
@@ -36,6 +37,15 @@ public class OccurrenceUtils {
                 .occurrenceType(OccurrenceType.DESOBEDIENCIA)
                 .date(LocalDate.now())
                 .description("Se negou a ficar sentado")
+                .build();
+    }
+
+    public static OccurrenceToStudentDTO createOccurrenceToStudentDTO() {
+        return OccurrenceToStudentDTO.builder()
+                .date(LocalDate.now())
+                .description("Se negou a ficar sentado")
+                .communicationType(CommunicationType.ESCRITO)
+                .occurrenceType(OccurrenceType.DESOBEDIENCIA)
                 .build();
     }
 }

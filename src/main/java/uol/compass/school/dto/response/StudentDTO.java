@@ -40,7 +40,7 @@ public class StudentDTO {
 
     private String school;
 
-    private Set<Responsible> responsible;
+    private Set<ResponsibleNameDTO> responsible;
 
     private List<ClassroomDTO> classrooms = new ArrayList<>();
 }

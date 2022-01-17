@@ -59,11 +59,6 @@ public class ClassroomController {
         return classroomService.unlinkACourse(classroomId, courseId);
     }
 
-    @GetMapping("/{id}/courses")
-    public Set<CourseDTO> getAllCourses(@PathVariable Long id) {
-        return classroomService.getAllCourses(id);
-    }
-
     @PostMapping("/{classroomId}/students/{studentId}")
     public MessageResponseDTO linkAStudent(@PathVariable Long classroomId, @PathVariable Long studentId) {
         return classroomService.linkAStudent(classroomId, studentId);
@@ -72,10 +67,5 @@ public class ClassroomController {
     @DeleteMapping("/{classroomId}/students/{studentId}")
     public MessageResponseDTO unlinkAStudent(@PathVariable Long classroomId, @PathVariable Long studentId) {
         return classroomService.unlinkAStudent(classroomId, studentId);
-    }
-
-    @GetMapping("/{id}/students")
-    public Set<StudentNameDTO> getAllStudents(@PathVariable Long id) {
-        return classroomService.getAllStudents(id);
     }
 }

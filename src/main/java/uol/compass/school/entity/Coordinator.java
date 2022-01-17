@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import uol.compass.school.enums.Role;
+import uol.compass.school.enums.Gender;
 
 import javax.persistence.*;
 
@@ -13,22 +13,21 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class User {
+public class Coordinator {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
-    private String username;
-
     @Column(nullable = false)
-    private String password;
-
-    @Enumerated(EnumType.STRING)
+    private String name;
+    
+    @Column
+    private String cpf;
+    
     @Column(nullable = false)
-    private Role role;
+    private Gender gender;
 
-    @OneToOne(mappedBy = "user")
-    private Responsible responsible;
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private User user;
 }

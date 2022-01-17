@@ -4,11 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import uol.compass.school.enums.Role;
+import org.hibernate.validator.constraints.br.CPF;
+import uol.compass.school.enums.Gender;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -16,17 +14,15 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserRequestDTO {
-
-    private Long id;
+public class CoordinatorRequestDTO {
 
     @NotBlank
-    private String username;
+    private String name;
 
     @NotBlank
-    private String password;
+    @CPF
+    private String cpf;
 
-    @Enumerated(EnumType.STRING)
     @NotNull
-    private Role role;
+    private Gender gender;
 }

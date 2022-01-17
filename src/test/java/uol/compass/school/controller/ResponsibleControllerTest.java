@@ -13,9 +13,11 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 import uol.compass.school.Utils.JsonUtils;
 import uol.compass.school.Utils.ResponsibleUtils;
+import uol.compass.school.Utils.StudentUtils;
 import uol.compass.school.dto.request.ResponsibleRequestDTO;
 import uol.compass.school.dto.response.MessageResponseDTO;
 import uol.compass.school.dto.response.ResponsibleDTO;
+import uol.compass.school.dto.response.StudentNameDTO;
 import uol.compass.school.service.ResponsibleService;
 
 import java.util.Collections;
@@ -113,7 +115,7 @@ public class ResponsibleControllerTest {
 
         when(responsibleService.update(id, expectedResponsibleRequestDTO)).thenReturn(expectedMessageResponse);
 
-        mockMvc.perform(put("/api/v1/students/1")
+        mockMvc.perform(put("/api/v1/responsible/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonUtils.asJsonString(expectedResponsibleRequestDTO)))
                 .andExpect(status().isOk())
@@ -134,5 +136,18 @@ public class ResponsibleControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message", is(expectedMessageResponse.getMessage())));
+    }
+
+    @Test
+    void whenFindAllStudentsFromResponsibleIsCalledThenReturnOKStatus() throws Exception {
+        Long id = 1L;
+        StudentNameDTO studentNameDTO = StudentUtils.createStudentNameDTO();
+
+        when(responsibleService.findAllStudents(id)).thenReturn(Collections.singleton(studentNameDTO));
+
+        mockMvc.perform(get("/api/v1/responsible/" + id + "/students")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].name", is(studentNameDTO.getName())));
     }
 }

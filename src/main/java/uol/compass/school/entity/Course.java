@@ -3,6 +3,7 @@ package uol.compass.school.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -10,6 +11,7 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
+@EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -26,5 +28,5 @@ public class Course {
     private Set<Classroom> classrooms = new HashSet<>();
 
     @OneToMany(mappedBy = "course")
-    private List<Educator> educators;
+    private List<Educator> educators = new ArrayList<>();
 }

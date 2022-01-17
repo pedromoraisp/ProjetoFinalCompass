@@ -33,7 +33,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public MessageResponseDTO create(UserRequestDTO userRequestDTO) {
-        verifyIfUsernameExists(userRequestDTO.getEmail(), userRequestDTO.getUsername());
+        verifyIfUsernameExists(userRequestDTO.getUsername());
 
         User userToSave = modelMapper.map(userRequestDTO, User.class);
         userToSave.setPassword(passwordEncoder.encode(userToSave.getPassword()));
@@ -66,10 +66,10 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(id);
     }
 
-    private void verifyIfUsernameExists(String email, String username) {
-        Optional<User> userFound = userRepository.findByEmailOrUsername(email, username);
+    private void verifyIfUsernameExists(String username) {
+        Optional<User> userFound = userRepository.findByUsername(username);
         userFound.ifPresent(user -> {
-            throw new UserAlreadyExistsException(email, username);
+            throw new UserAlreadyExistsException(username);
         });
     }
 

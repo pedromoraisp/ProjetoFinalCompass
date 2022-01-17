@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
@@ -21,7 +22,7 @@ import uol.compass.school.service.CourseService;
 import java.util.Collections;
 
 import static org.hamcrest.core.Is.is;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -125,9 +126,42 @@ public class CourseControllerTest {
                 .message("Course with id 1 was successfully deleted")
                 .build();
 
+
         when(courseService.deleteById(id)).thenReturn(expectedMessageResponse);
 
         mockMvc.perform(delete("/api/v1/courses/1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message", is(expectedMessageResponse.getMessage())));
+    }
+
+    @Test
+    void whenPOSTToLinkAEducatorThenReturnOkStatus() throws Exception {
+        Long courseId = 1L;
+        Long educatorId = 1L;
+        MessageResponseDTO expectedMessageResponse = MessageResponseDTO.builder()
+                .message("Course with id 1 was linked to the educator with id 1 successfully")
+                .build();
+
+        when(courseService.linkAEducator(courseId, educatorId)).thenReturn(expectedMessageResponse);
+
+        mockMvc.perform(post("/api/v1/courses/" + courseId + "/educators/" + educatorId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message", is(expectedMessageResponse.getMessage())));
+    }
+
+    @Test
+    void whenDELETEToUnlinkAEducatorThenReturnOkStatus() throws Exception {
+        Long courseId = 1L;
+        Long educatorId = 1L;
+        MessageResponseDTO expectedMessageResponse = MessageResponseDTO.builder()
+                .message("Course with id 1 was unlinked to the educator with id 1 successfully")
+                .build();
+
+        when(courseService.unlinkAEducator(courseId, educatorId)).thenReturn(expectedMessageResponse);
+
+        mockMvc.perform(delete("/api/v1/courses/" + courseId + "/educators/" + educatorId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message", is(expectedMessageResponse.getMessage())));

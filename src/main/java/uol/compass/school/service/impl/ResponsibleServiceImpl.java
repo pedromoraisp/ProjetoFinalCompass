@@ -10,6 +10,7 @@ import uol.compass.school.dto.request.ResponsibleRequestDTO;
 import uol.compass.school.dto.response.MessageResponseDTO;
 import uol.compass.school.dto.response.ResponsibleDTO;
 import uol.compass.school.dto.response.StudentDTO;
+import uol.compass.school.dto.response.StudentNameDTO;
 import uol.compass.school.entity.Responsible;
 import uol.compass.school.entity.Student;
 import uol.compass.school.repository.ResponsibleRepository;
@@ -37,7 +38,7 @@ public class ResponsibleServiceImpl implements ResponsibleService {
     @Override
     public MessageResponseDTO create(ResponsibleRequestDTO responsibleRequestDTO) {
         Responsible responsibleToSave = modelMapper.map(responsibleRequestDTO, Responsible.class);
-        Responsible savedResponsible = this.responsibleRepository.save(responsibleToSave);
+        Responsible savedResponsible = responsibleRepository.save(responsibleToSave);
 
         return MessageResponseDTO.builder()
                 .message(String.format("Responsible %s with id %s was successfully created", savedResponsible.getName(), savedResponsible.getId()))
@@ -46,13 +47,12 @@ public class ResponsibleServiceImpl implements ResponsibleService {
 
     @Override
     public List<ResponsibleDTO> findAll(String name) {
-
         List<Responsible> responsibles;
 
         if (name == null) {
-            responsibles = this.responsibleRepository.findAll();
+            responsibles = responsibleRepository.findAll();
         } else {
-            responsibles = this.responsibleRepository.findByNameStartingWith(name);
+            responsibles = responsibleRepository.findByNameStartingWith(name);
         }
 
         return responsibles.stream()
@@ -61,41 +61,30 @@ public class ResponsibleServiceImpl implements ResponsibleService {
 
     @Override
     public ResponsibleDTO findById(Long id) {
-        Responsible responsible = this.responsibleRepository.findById(id)
-                .orElseThrow(() ->
-                        new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Unable to find responsible " +
-                                "with id %s", id)));
-
+        Responsible responsible = checkIfResponsibleExists(id);
         return modelMapper.map(responsible, ResponsibleDTO.class);
     }
 
     @Override
     public MessageResponseDTO update(Long id, ResponsibleRequestDTO responsibleRequestDTO) {
-
-        Responsible responsible = this.responsibleRepository.findById(id)
-                .orElseThrow(() ->
-                        new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Unable to find responsible" +
-                                " with id %s", id)));
+        Responsible responsible = checkIfResponsibleExists(id);
 
         Responsible responsibleToSave = modelMapper.map(responsibleRequestDTO, Responsible.class);
         responsibleToSave.setId(id);
 
-        this.responsibleRepository.save(responsibleToSave);
+        responsibleRepository.save(responsibleToSave);
 
         return MessageResponseDTO.builder()
                 .message(String.format("Responsible with id %s was successfully updated", responsible.getId()))
                 .build();
-
     }
+
     @Transactional
     @Override
     public MessageResponseDTO deleteById(Long id) {
+        checkIfResponsibleExists(id);
 
-        Responsible responsible = this.responsibleRepository.findById(id)
-                .orElseThrow(() ->
-                        new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Unable to find responsible with id %s", id)));
-
-        this.responsibleRepository.deleteById(id);
+        responsibleRepository.deleteById(id);
 
         return MessageResponseDTO.builder()
                 .message(String.format("Responsible with id %s was successfully deleted", id))
@@ -103,18 +92,21 @@ public class ResponsibleServiceImpl implements ResponsibleService {
     }
 
     @Override
-    public Set<StudentDTO> findAllStudents(Long id) {
+    public Set<StudentNameDTO> findAllStudents(Long id) {
         Set<Student> students;
 
-        Responsible responsible = this.responsibleRepository.findById(id)
-                .orElseThrow(() ->
-                        new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Unable to find responsible with id %s", id)));
+        Responsible responsible = checkIfResponsibleExists(id);
 
         students = (responsible.getStudents() == null) ? new HashSet<>() : responsible.getStudents();
 
 
-        return students.stream().map(student -> modelMapper.map(student, StudentDTO.class))
+        return students.stream().map(student -> modelMapper.map(student, StudentNameDTO.class))
                     .collect(Collectors.toSet());
+    }
 
+    private Responsible checkIfResponsibleExists(Long id) {
+        return responsibleRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Unable to find responsible with id %s", id)));
     }
 }

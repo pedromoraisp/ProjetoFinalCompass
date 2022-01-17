@@ -8,14 +8,17 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import org.springframework.web.server.ResponseStatusException;
 import uol.compass.school.Utils.ClassroomUtils;
+import uol.compass.school.Utils.CourseUtils;
 import uol.compass.school.Utils.StudentUtils;
 import uol.compass.school.dto.request.ClassroomRequestDTO;
 import uol.compass.school.dto.response.ClassroomDTO;
 import uol.compass.school.dto.response.MessageResponseDTO;
 import uol.compass.school.dto.response.StudentNameDTO;
 import uol.compass.school.entity.Classroom;
+import uol.compass.school.entity.Course;
 import uol.compass.school.entity.Student;
 import uol.compass.school.repository.ClassroomRepository;
+import uol.compass.school.repository.CourseRepository;
 import uol.compass.school.repository.StudentRepository;
 
 import java.util.Collections;
@@ -35,6 +38,9 @@ class ClassroomServiceImplTest {
 
     @Mock
     private StudentRepository studentRepository;
+
+    @Mock
+    private CourseRepository courseRepository;
 
     @Mock
     private ModelMapper modelMapper;
@@ -158,17 +164,54 @@ class ClassroomServiceImplTest {
 
     @Test
     void whenClassroomIdAndCourseIdAreInformedThenTheyShouldBeLinked() {
+        Classroom classroom = ClassroomUtils.createClassroomWithStudentsAndCourses();
+        Course course = CourseUtils.createCourse();
+        course.setId(2L);
+        MessageResponseDTO expectedMessageResponse = MessageResponseDTO.builder()
+                .message("Classroom with id 1 was linked to the course with id 2 successfully")
+                .build();
 
+        when(classroomRepository.findById(classroom.getId())).thenReturn(Optional.of(classroom));
+        when(courseRepository.findById(course.getId())).thenReturn(Optional.of(course));
+
+        MessageResponseDTO messageResponseDTO = classroomService.linkACourse(classroom.getId(), course.getId());
+
+        assertEquals(expectedMessageResponse, messageResponseDTO);
     }
 
     @Test
     void whenClassroomIdAndCourseIdAreInformedThenTheyShouldBeUnlinked() {
+        Long id = 1L;
+        Classroom expectedClassroom = ClassroomUtils.createClassroomWithStudentsAndCourses();
+        Course course = CourseUtils.createCourse();
+        MessageResponseDTO expectedMessageResponse = MessageResponseDTO.builder()
+                .message("Classroom with id 1 was unlinked to the course with id 1 successfully")
+                .build();
 
+        when(classroomRepository.findById(id)).thenReturn(Optional.of(expectedClassroom));
+        when(courseRepository.findById(id)).thenReturn(Optional.of(course));
+
+        MessageResponseDTO messageResponseDTO = classroomService.unlinkACourse(id, id);
+
+        assertEquals(expectedMessageResponse, messageResponseDTO);
+    }
+
+    @Test
+    void whenUnlinkedClassroomIdAndCourseIdAreInformedThenShouldReturnAnException() {
+        Long id = 1L;
+        Classroom expectedClassroom = ClassroomUtils.createClassroomWithStudentsAndCourses();
+        Course course = CourseUtils.createCourse();
+        course.setId(2L);
+
+        when(classroomRepository.findById(id)).thenReturn(Optional.of(expectedClassroom));
+        when(courseRepository.findById(id)).thenReturn(Optional.of(course));
+
+        assertThrows(ResponseStatusException.class, () -> classroomService.unlinkACourse(id, id), "This course is not linked to the class");
     }
 
     @Test
     void whenClassroomIdAndStudentIdAreInformedThenTheyShouldBeLinked() {
-        Classroom classroom = ClassroomUtils.createClassroomWithStudents();
+        Classroom classroom = ClassroomUtils.createClassroomWithStudentsAndCourses();
         Student student = StudentUtils.createStudent();
         student.setId(2L);
         MessageResponseDTO expectedMessageResponse = MessageResponseDTO.builder()
@@ -186,7 +229,7 @@ class ClassroomServiceImplTest {
     @Test
     void whenClassroomIdAndStudentIdAreInformedThenTheyShouldBeUnlinked() {
         Long id = 1L;
-        Classroom expectedClassroom = ClassroomUtils.createClassroom();
+        Classroom expectedClassroom = ClassroomUtils.createClassroomWithStudentsAndCourses();
         Student expectedStudent = StudentUtils.createStudent();
         MessageResponseDTO expectedMessageResponse = MessageResponseDTO.builder()
                 .message("Classroom with id 1 was unlinked to the student with id 1 successfully")
@@ -201,18 +244,29 @@ class ClassroomServiceImplTest {
     }
 
     @Test
-    void whenClassroomIdIsInformedThenReturnItReturnItsStudents() {
+    void whenUnlinkedClassroomIdAndStudentIdAreInformedThenShouldReturnAnException() {
         Long id = 1L;
-        Classroom expectedClassroom = ClassroomUtils.createClassroom();
+        Classroom expectedClassroom = ClassroomUtils.createClassroomWithStudentsAndCourses();
         Student student = StudentUtils.createStudent();
-        expectedClassroom.setStudents(Collections.singleton(student));
-        StudentNameDTO studentNameDTO = StudentUtils.createStudentNameDTO();
+        student.setId(2L);
 
         when(classroomRepository.findById(id)).thenReturn(Optional.of(expectedClassroom));
-        when(modelMapper.map(student, StudentNameDTO.class)).thenReturn(studentNameDTO);
+        when(studentRepository.findById(id)).thenReturn(Optional.of(student));
 
-        Set<StudentNameDTO> allStudents = classroomService.getAllStudents(id);
+        assertThrows(ResponseStatusException.class, () -> classroomService.unlinkAStudent(id, id), "This student is not linked to the class");
+    }
 
-        assertEquals(Collections.singleton(studentNameDTO), allStudents);
+    @Test
+    void whenNonexistentCourseIdIsGivenThenReturnAnException() {
+        Long id = 1L;
+
+        assertThrows(ResponseStatusException.class, () -> classroomService.linkACourse(id, id), "Unable to find course with id 1");
+    }
+
+    @Test
+    void whenNonexistentStudentIdIsGivenThenReturnAnException() {
+        Long id = 1L;
+
+        assertThrows(ResponseStatusException.class, () -> classroomService.linkAStudent(id, id), "Unable to find student with id 1");
     }
 }

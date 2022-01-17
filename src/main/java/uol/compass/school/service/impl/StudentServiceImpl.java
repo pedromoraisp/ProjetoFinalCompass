@@ -73,7 +73,7 @@ public class StudentServiceImpl implements StudentService {
         Student studentToUpdate = modelMapper.map(studentRequestDTO, Student.class);
         studentToUpdate.setId(id);
 
-        Student updatedStudent = studentRepository.save(studentToUpdate);
+        studentRepository.save(studentToUpdate);
 
         return MessageResponseDTO.builder()
                 .message(String.format("Student with id %s was successfully updated", id))
@@ -84,7 +84,6 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public MessageResponseDTO deleteById(Long id) {
         checkIfStudentExists(id);
-
         studentRepository.deleteById(id);
 
         return MessageResponseDTO.builder()

@@ -7,6 +7,7 @@ import uol.compass.school.dto.request.ResponsibleRequestDTO;
 import uol.compass.school.dto.response.MessageResponseDTO;
 import uol.compass.school.dto.response.ResponsibleDTO;
 import uol.compass.school.dto.response.StudentDTO;
+import uol.compass.school.dto.response.StudentNameDTO;
 import uol.compass.school.service.ResponsibleService;
 
 import javax.transaction.Transactional;
@@ -44,7 +45,7 @@ public class ResponsibleController {
     }
 
     @GetMapping("/{id}/students")
-    public Set<StudentDTO> findAllStudents(@PathVariable Long id) {
+    public Set<StudentNameDTO> findAllStudents(@PathVariable Long id) {
         return responsibleService.findAllStudents(id);
     }
 

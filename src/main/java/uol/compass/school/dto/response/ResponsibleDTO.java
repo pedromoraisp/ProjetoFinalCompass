@@ -37,5 +37,4 @@ public class ResponsibleDTO {
     private EducationalLevel educationalLevel;
 
     private String profession;
-
-    }
+}

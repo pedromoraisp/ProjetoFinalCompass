@@ -23,7 +23,6 @@ public class CourseController {
         this.courseService = courseService;
     }
 
-
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public MessageResponseDTO create(@RequestBody @Valid CourseRequestDTO courseRequestDTO) {
@@ -51,13 +50,13 @@ public class CourseController {
     }
 
     @PostMapping("/{courseId}/educators/{educatorId}")
-    public MessageResponseDTO linkAEducator(@PathVariable Long courseIdId, @PathVariable Long educatorId) {
-        return courseService.linkAEducator(courseIdId, educatorId);
+    public MessageResponseDTO linkAEducator(@PathVariable Long courseId, @PathVariable Long educatorId) {
+        return courseService.linkAEducator(courseId, educatorId);
     }
 
     @DeleteMapping("/{courseId}/educators/{educatorId}")
-    public MessageResponseDTO unlinkAEducator(@PathVariable Long courseIdId, @PathVariable Long educatorId) {
-        return courseService.unlinkAEducator(courseIdId, educatorId);
+    public MessageResponseDTO unlinkAEducator(@PathVariable Long courseId, @PathVariable Long educatorId) {
+        return courseService.unlinkAEducator(courseId, educatorId);
     }
 
 }
