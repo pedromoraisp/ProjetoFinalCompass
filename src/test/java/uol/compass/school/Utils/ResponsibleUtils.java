@@ -3,7 +3,6 @@ package uol.compass.school.Utils;
 import uol.compass.school.dto.request.ResponsibleRequestDTO;
 import uol.compass.school.dto.response.ResponsibleDTO;
 import uol.compass.school.entity.Responsible;
-import uol.compass.school.entity.Student;
 import uol.compass.school.enums.EducationalLevel;
 import uol.compass.school.enums.Gender;
 import uol.compass.school.enums.RelationshipType;

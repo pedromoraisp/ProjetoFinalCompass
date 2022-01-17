@@ -8,7 +8,6 @@ import org.springframework.web.server.ResponseStatusException;
 import uol.compass.school.dto.request.CourseRequestDTO;
 import uol.compass.school.dto.response.CourseDTO;
 import uol.compass.school.dto.response.MessageResponseDTO;
-import uol.compass.school.entity.Classroom;
 import uol.compass.school.entity.Course;
 import uol.compass.school.entity.Educator;
 import uol.compass.school.repository.CourseRepository;
@@ -16,7 +15,6 @@ import uol.compass.school.repository.EducatorRepository;
 import uol.compass.school.service.CourseService;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,9 +27,10 @@ public class CourseServiceImpl implements CourseService {
     private ModelMapper modelMapper;
 
     @Autowired
-    public CourseServiceImpl(CourseRepository courseRepository, ModelMapper modelMapper) {
+    public CourseServiceImpl(CourseRepository courseRepository, ModelMapper modelMapper, EducatorRepository educatorRepository) {
         this.courseRepository = courseRepository;
         this.modelMapper = modelMapper;
+        this.educatorRepository = educatorRepository;
     }
 
     @Override
