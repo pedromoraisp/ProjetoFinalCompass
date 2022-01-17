@@ -168,17 +168,17 @@ class ClassroomServiceImplTest {
 
     @Test
     void whenClassroomIdAndStudentIdAreInformedThenTheyShouldBeLinked() {
-        Long id = 1L;
-        Classroom expectedClassroom = ClassroomUtils.createClassroom();
-        Student expectedStudent = StudentUtils.createStudent();
+        Classroom classroom = ClassroomUtils.createClassroomWithStudents();
+        Student student = StudentUtils.createStudent();
+        student.setId(2L);
         MessageResponseDTO expectedMessageResponse = MessageResponseDTO.builder()
-                .message("Classroom with id 1 was linked to the student with id 1 successfully")
+                .message("Classroom with id 1 was linked to the student with id 2 successfully")
                 .build();
 
-        when(classroomRepository.findById(id)).thenReturn(Optional.of(expectedClassroom));
-        when(studentRepository.findById(id)).thenReturn(Optional.of(expectedStudent));
+        when(classroomRepository.findById(classroom.getId())).thenReturn(Optional.of(classroom));
+        when(studentRepository.findById(student.getId())).thenReturn(Optional.of(student));
 
-        MessageResponseDTO messageResponseDTO = classroomService.linkAStudent(id, id);
+        MessageResponseDTO messageResponseDTO = classroomService.linkAStudent(classroom.getId(), student.getId());
 
         assertEquals(expectedMessageResponse, messageResponseDTO);
     }

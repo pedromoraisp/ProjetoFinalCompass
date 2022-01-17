@@ -8,6 +8,8 @@ import org.hibernate.validator.constraints.br.CPF;
 import uol.compass.school.enums.EducationalLevel;
 import uol.compass.school.enums.Gender;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -23,6 +25,7 @@ public class StudentRequestDTO {
     private String name;
 
     @NotNull
+    @Enumerated(EnumType.STRING)
     private Gender gender;
 
     @CPF

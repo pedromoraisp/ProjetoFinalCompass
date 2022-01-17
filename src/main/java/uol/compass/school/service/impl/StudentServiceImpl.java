@@ -3,21 +3,25 @@ package uol.compass.school.service.impl;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import uol.compass.school.dto.request.StudentRequestDTO;
-import uol.compass.school.dto.response.MessageResponseDTO;
-import uol.compass.school.dto.response.OccurrenceDTO;
-import uol.compass.school.dto.response.StudentDTO;
+import uol.compass.school.dto.response.*;
 import uol.compass.school.entity.Occurrence;
 import uol.compass.school.entity.Student;
+import uol.compass.school.entity.User;
 import uol.compass.school.repository.StudentRepository;
+import uol.compass.school.repository.UserRepository;
 import uol.compass.school.service.StudentService;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,11 +29,14 @@ public class StudentServiceImpl implements StudentService {
 
     private StudentRepository studentRepository;
 
+    private UserRepository userRepository;
+
     private ModelMapper modelMapper;
 
     @Autowired
-    public StudentServiceImpl(StudentRepository studentRepository, ModelMapper modelMapper) {
+    public StudentServiceImpl(StudentRepository studentRepository, UserRepository userRepository, ModelMapper modelMapper) {
         this.studentRepository = studentRepository;
+        this.userRepository = userRepository;
         this.modelMapper = modelMapper;
     }
 
@@ -116,6 +123,33 @@ public class StudentServiceImpl implements StudentService {
             return filteredOccurrences.stream().map(occurrence -> modelMapper.map(occurrence, OccurrenceDTO.class))
                     .collect(Collectors.toList());
         }
+    }
+
+    @Override
+    public Set<StudentOccurrenceDTO> getOccurrencesFromStudentsLinkedToUser() {
+        String loggedUsername = getLoggedUsername();
+
+        Optional<User> user = userRepository.findByUsername(loggedUsername);
+        if(user.isPresent()) {
+            Set<Student> students = user.get().getResponsible().getStudents();
+            return students.stream().map(student -> {
+                StudentOccurrenceDTO studentOccurrenceDTO = modelMapper.map(student, StudentOccurrenceDTO.class);
+                List<OccurrenceToStudentDTO> occurrenceDTO = student.getOccurrences().stream().map(
+                        occurrence -> modelMapper.map(occurrence, OccurrenceToStudentDTO.class)).collect(Collectors.toList());
+                studentOccurrenceDTO.setOccurrences(occurrenceDTO);
+                return studentOccurrenceDTO;
+            }).collect(Collectors.toSet());
+        }
+        return null;
+    }
+
+    private String getLoggedUsername() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        String username =
+                (principal instanceof UserDetails) ? ((UserDetails)principal).getUsername() : principal.toString();
+
+        return username;
     }
 
     private Student checkIfStudentExists(Long id) {

@@ -18,3 +18,7 @@ logging:
     com:
       example:
         bookstoremanager: INFO
+
+jwt:
+  secret: pwJKQorCQxnV1zS5Bn4GHX1RjR58KkRwwBu1mA5n8MBpmMS1oVboOymL7Xm03qwBTar6guldLtnmcWnI6hCzbg
+  validity: 18000

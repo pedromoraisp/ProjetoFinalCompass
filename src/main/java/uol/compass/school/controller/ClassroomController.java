@@ -49,20 +49,20 @@ public class ClassroomController {
         return classroomService.delete(id);
     }
 
-//    @PostMapping("/{classroomId}/courses/{courseId}")
-//    public MessageResponseDTO linkACourse(@PathVariable Long classroomId, @PathVariable Long courseId) {
-//        return classroomService.linkACourse(classroomId, courseId);
-//    }
-//
-//    @DeleteMapping("/{classroomId}/courses/{courseId}")
-//    public MessageResponseDTO unlinkACourse(@PathVariable Long classroomId, @PathVariable Long courseId) {
-//        return classroomService.unlinkACourse(classroomId, courseId);
-//    }
-//
-//    @GetMapping("/{id}/courses")
-//    public Set<ClassroomDTO> getAllCourses(@PathVariable Long id) {
-//        return classroomService.getAllCourses(id);
-//    }
+    @PostMapping("/{classroomId}/courses/{courseId}")
+    public MessageResponseDTO linkACourse(@PathVariable Long classroomId, @PathVariable Long courseId) {
+        return classroomService.linkACourse(classroomId, courseId);
+    }
+
+    @DeleteMapping("/{classroomId}/courses/{courseId}")
+    public MessageResponseDTO unlinkACourse(@PathVariable Long classroomId, @PathVariable Long courseId) {
+        return classroomService.unlinkACourse(classroomId, courseId);
+    }
+
+    @GetMapping("/{id}/courses")
+    public Set<CourseDTO> getAllCourses(@PathVariable Long id) {
+        return classroomService.getAllCourses(id);
+    }
 
     @PostMapping("/{classroomId}/students/{studentId}")
     public MessageResponseDTO linkAStudent(@PathVariable Long classroomId, @PathVariable Long studentId) {

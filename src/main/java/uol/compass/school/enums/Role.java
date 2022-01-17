@@ -5,8 +5,9 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum CommunicationType {
-	VERBAL,
-	ESCRITO,
-	DIRETA_AOS_PAIS
+public enum Role {
+    ADMIN("ADMIN"),
+    RESPONSIBLE("RESPONSIBLE");
+
+    private final String description;
 }
