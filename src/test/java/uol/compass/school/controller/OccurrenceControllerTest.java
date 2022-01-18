@@ -57,15 +57,15 @@ class OccurrenceControllerTest {
         Mockito.when(occurrenceService.create(expectedOccurrenceRequestDTO)).thenReturn(expectedMessageResponse);
 
         mockMvc.perform(post("/api/v1/occurrences")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtils.asJsonString(expectedOccurrenceRequestDTO)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(JsonUtils.asJsonString(expectedOccurrenceRequestDTO)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.message", is(expectedMessageResponse.getMessage())));
     }
 
     @Test
     void whenPOSTIsCalledWithIncorrectFieldThenShouldReturnBadRequestStatus() throws Exception {
-    	OccurrenceRequestDTO expectedOccurrenceRequestDTO = OccurrenceUtils.createOccurrenceRequestDTO();
+        OccurrenceRequestDTO expectedOccurrenceRequestDTO = OccurrenceUtils.createOccurrenceRequestDTO();
         expectedOccurrenceRequestDTO.setDescription(null);
 
         mockMvc.perform(post("/api/v1/occurrences")
@@ -76,7 +76,7 @@ class OccurrenceControllerTest {
 
     @Test
     void whenFindAllIsCalledThenShouldReturnOKStatus() throws Exception {
-    	OccurrenceDTO expectedOccurrenceDTO = OccurrenceUtils.createOccurrenceDTO();
+        OccurrenceDTO expectedOccurrenceDTO = OccurrenceUtils.createOccurrenceDTO();
 
         when(occurrenceService.findAll(null, null)).thenReturn(Collections.singletonList(expectedOccurrenceDTO));
 
@@ -133,5 +133,21 @@ class OccurrenceControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message", is(expectedMessageResponse.getMessage())));
+    }
+
+    @Test
+    void whenGETToLinkOccurrenceToStudentIsCalledThenReturnOkStatus() throws Exception {
+        Long occurrenceId = 1L;
+        Long studentId = 1L;
+        MessageResponseDTO messageResponseDTO = MessageResponseDTO.builder()
+                .message("the occurrence with id 1 was linked to the student with id 1 successfully")
+                .build();
+
+        when(occurrenceService.linkOccurrenceToStudent(occurrenceId, studentId)).thenReturn(messageResponseDTO);
+
+        mockMvc.perform(post("/api/v1/occurrences/" + occurrenceId + "/students/" + studentId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message", is(messageResponseDTO.getMessage())));
     }
 }

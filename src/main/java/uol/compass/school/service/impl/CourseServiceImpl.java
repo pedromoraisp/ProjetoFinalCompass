@@ -10,11 +10,14 @@ import uol.compass.school.dto.response.CourseDTO;
 import uol.compass.school.dto.response.MessageResponseDTO;
 import uol.compass.school.entity.Course;
 import uol.compass.school.entity.Educator;
+import uol.compass.school.entity.Student;
 import uol.compass.school.repository.CourseRepository;
 import uol.compass.school.repository.EducatorRepository;
 import uol.compass.school.service.CourseService;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,7 +39,7 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public MessageResponseDTO create(CourseRequestDTO courseRequestDTO) {
         Course courseToSave = modelMapper.map(courseRequestDTO, Course.class);
-        Course savedCourse = this.courseRepository.save(courseToSave);
+        Course savedCourse = courseRepository.save(courseToSave);
 
         return MessageResponseDTO.builder()
                 .message(String.format("Course %s with id %s was successfully created", savedCourse.getName(), savedCourse.getId()))
@@ -48,9 +51,9 @@ public class CourseServiceImpl implements CourseService {
         List<Course> courses;
 
         if (name == null) {
-            courses = this.courseRepository.findAll();
+            courses = courseRepository.findAll();
         } else {
-            courses = this.courseRepository.findByNameStartingWith(name);
+            courses = courseRepository.findByNameStartingWith(name);
         }
 
         return courses.stream()
@@ -59,18 +62,14 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public CourseDTO findById(Long id) {
-        Course course = this.courseRepository.findById(id)
-                .orElseThrow(() ->
-                        new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Unable to find course with id %s", id)));
+        Course course = checkIfCourseExists(id);
 
         return modelMapper.map(course, CourseDTO.class);
     }
 
     @Override
     public MessageResponseDTO update(Long id, CourseRequestDTO courseRequestDTO) {
-        Course course = this.courseRepository.findById(id)
-                .orElseThrow(() ->
-                        new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Unable to find course with id %s", id)));
+        Course course = checkIfCourseExists(id);
 
         Course courseToSave = modelMapper.map(courseRequestDTO, Course.class);
         courseToSave.setId(id);
@@ -84,11 +83,9 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public MessageResponseDTO deleteById(Long id) {
-        this.courseRepository.findById(id)
-                .orElseThrow(() ->
-                        new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Unable to find course with id %s", id)));
+        checkIfCourseExists(id);
 
-        this.courseRepository.deleteById(id);
+        courseRepository.deleteById(id);
 
         return MessageResponseDTO.builder()
                 .message(String.format("Course with id %s was successfully deleted", id))
@@ -99,9 +96,7 @@ public class CourseServiceImpl implements CourseService {
     public MessageResponseDTO linkAEducator(Long courseId, Long educatorId) {
         Course course = checkIfCourseExists(courseId);
 
-        Educator educator = educatorRepository.findById(educatorId)
-                .orElseThrow(() ->
-                        new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Unable to find educator with id %s", educatorId)));
+        Educator educator = checkIfEducatorExists(educatorId);
 
         if (!(course.getEducators() == null)) {
             course.getEducators().add(educator);
@@ -117,14 +112,16 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public MessageResponseDTO unlinkAEducator(Long courseId, Long educatorId) {
         Course course = checkIfCourseExists(courseId);
-
-        Educator educator = educatorRepository.findById(educatorId)
-                .orElseThrow(() ->
-                        new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Unable to find educator with id %s", educatorId)));
+        Educator educator = checkIfEducatorExists(educatorId);
 
         if (!(course.getEducators() == null)) {
-            course.getEducators().remove(educator);
+            if (course.getEducators().contains(educator)) {
+                course.getEducators().remove(educator);
+            } else {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "This educator is not linked to the course");
+            }
         }
+
 
         courseRepository.save(course);
 
@@ -139,6 +136,9 @@ public class CourseServiceImpl implements CourseService {
                         new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Unable to find classroom with id %s", id)));
     }
 
-
-
+    private Educator checkIfEducatorExists(Long educatorId) {
+        return educatorRepository.findById(educatorId)
+                .orElseThrow(() ->
+                        new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Unable to find educator with id %s", educatorId)));
+    }
 }

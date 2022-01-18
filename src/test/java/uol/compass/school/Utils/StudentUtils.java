@@ -3,6 +3,7 @@ package uol.compass.school.Utils;
 import uol.compass.school.dto.request.StudentRequestDTO;
 import uol.compass.school.dto.response.StudentDTO;
 import uol.compass.school.dto.response.StudentNameDTO;
+import uol.compass.school.dto.response.StudentOccurrenceDTO;
 import uol.compass.school.entity.Student;
 import uol.compass.school.enums.EducationalLevel;
 import uol.compass.school.enums.Gender;
@@ -75,6 +76,14 @@ public class StudentUtils {
         return StudentNameDTO.builder()
                 .id(1L)
                 .name("Pedro Henrique")
+                .build();
+    }
+
+    public static StudentOccurrenceDTO createStudentOccurrenceDTO() {
+        return StudentOccurrenceDTO.builder()
+                .id(1L)
+                .name("Pedro Henrique")
+                .occurrences(Collections.singletonList(OccurrenceUtils.createOccurrenceToStudentDTO()))
                 .build();
     }
 }

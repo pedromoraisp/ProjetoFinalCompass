@@ -69,7 +69,7 @@ class UserControllerTest {
     @Test
     void whenPOSTIsCalledWithIncorrectFieldsThenReturnBadRequestStatus() throws Exception {
         UserRequestDTO userRequestDTO = UserUtils.createUserRequestDTO();
-        userRequestDTO.setName(null);
+        userRequestDTO.setUsername(null);
 
         mockMvc.perform(post("/api/v1/users")
                         .contentType(MediaType.APPLICATION_JSON)

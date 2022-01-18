@@ -32,8 +32,8 @@ public class EducatorServiceImpl implements EducatorService {
 
     @Override
     public MessageResponseDTO create(EducatorRequestDTO educatorRequestDTO) {
-    	Educator educatorToSave = modelMapper.map(educatorRequestDTO, Educator.class);
-    	Educator savedEducator = this.educatorRepository.save(educatorToSave);
+        Educator educatorToSave = modelMapper.map(educatorRequestDTO, Educator.class);
+        Educator savedEducator = educatorRepository.save(educatorToSave);
 
         return MessageResponseDTO.builder()
                 .message(String.format("Educator %s with id %s was successfully created", savedEducator.getName(), savedEducator.getId()))
@@ -45,9 +45,9 @@ public class EducatorServiceImpl implements EducatorService {
         List<Educator> educators;
 
         if (name == null) {
-        	educators = this.educatorRepository.findAll();
+            educators = educatorRepository.findAll();
         } else {
-        	educators = this.educatorRepository.findByNameStartingWith(name);
+            educators = educatorRepository.findByNameStartingWith(name);
         }
 
         return educators.stream()
@@ -56,23 +56,19 @@ public class EducatorServiceImpl implements EducatorService {
 
     @Override
     public EducatorDTO findById(Long id) {
-    	Educator educator = this.educatorRepository.findById(id)
-                .orElseThrow(() ->
-                        new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Unable to find educator with id %s", id)));
+        Educator educator = checkIfEducatorExists(id);
 
         return modelMapper.map(educator, EducatorDTO.class);
     }
 
     @Override
     public MessageResponseDTO update(Long id, EducatorRequestDTO educatorRequestDTO) {
-    	Educator educator = this.educatorRepository.findById(id)
-                .orElseThrow(() ->
-                        new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Unable to find educator with id %s", id)));
+        Educator educator = checkIfEducatorExists(id);
 
-    	Educator educatorToSave = modelMapper.map(educatorRequestDTO, Educator.class);
-    	educatorToSave.setId(id);
+        Educator educatorToSave = modelMapper.map(educatorRequestDTO, Educator.class);
+        educatorToSave.setId(id);
 
-        this.educatorRepository.save(educatorToSave);
+        educatorRepository.save(educatorToSave);
 
         return MessageResponseDTO.builder()
                 .message(String.format("Educator with id %s was successfully updated", educator.getId()))
@@ -82,17 +78,19 @@ public class EducatorServiceImpl implements EducatorService {
     @Transactional
     @Override
     public MessageResponseDTO deleteById(Long id) {
-        this.educatorRepository.findById(id)
-                .orElseThrow(() ->
-                        new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Unable to find educator with id %s", id)));
+        checkIfEducatorExists(id);
 
-        this.educatorRepository.deleteById(id);
+        educatorRepository.deleteById(id);
 
         return MessageResponseDTO.builder()
                 .message(String.format("Educator with id %s was successfully deleted", id))
                 .build();
     }
 
-	
+    private Educator checkIfEducatorExists(Long id) {
+        return educatorRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Unable to find educator with id %s", id)));
     }
+}
 

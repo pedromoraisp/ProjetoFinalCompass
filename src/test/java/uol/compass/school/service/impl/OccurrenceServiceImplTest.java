@@ -8,11 +8,14 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import org.springframework.web.server.ResponseStatusException;
 import uol.compass.school.Utils.OccurrenceUtils;
+import uol.compass.school.Utils.StudentUtils;
 import uol.compass.school.dto.request.OccurrenceRequestDTO;
 import uol.compass.school.dto.response.MessageResponseDTO;
 import uol.compass.school.dto.response.OccurrenceDTO;
 import uol.compass.school.entity.Occurrence;
+import uol.compass.school.entity.Student;
 import uol.compass.school.repository.OccurrenceRepository;
+import uol.compass.school.repository.StudentRepository;
 
 import java.util.Collections;
 import java.util.List;
@@ -27,6 +30,9 @@ class OccurrenceServiceImplTest {
 
     @Mock
     private OccurrenceRepository occurrenceRepository;
+
+    @Mock
+    private StudentRepository studentRepository;
 
     @Mock
     private ModelMapper modelMapper;
@@ -148,5 +154,23 @@ class OccurrenceServiceImplTest {
         when(occurrenceRepository.findById(id)).thenReturn(Optional.empty());
 
         assertThrows(ResponseStatusException.class, () -> occurrenceService.deleteById(id));
+    }
+
+    @Test
+    void whenLinkStudentToOccurrenceIsCalledThenTheyShouldBeLinked() {
+        Long id = 1L;
+        Occurrence expectedOccurrence = OccurrenceUtils.createOccurrence();
+        Student student = StudentUtils.createStudent();
+        MessageResponseDTO expectedMessageResponse = MessageResponseDTO.builder()
+                .message("the occurrence with id 1 was linked to the student with id 1 successfully")
+                .build();
+
+        when(occurrenceRepository.findById(id)).thenReturn(Optional.of(expectedOccurrence));
+        when(studentRepository.findById(id)).thenReturn(Optional.of(student));
+        when(occurrenceRepository.save(expectedOccurrence)).thenReturn(expectedOccurrence);
+
+        MessageResponseDTO messageResponseDTO = occurrenceService.linkOccurrenceToStudent(id, id);
+
+        assertEquals(expectedMessageResponse, messageResponseDTO);
     }
 }

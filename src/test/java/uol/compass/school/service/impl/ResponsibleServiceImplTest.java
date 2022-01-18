@@ -13,6 +13,7 @@ import uol.compass.school.dto.request.ResponsibleRequestDTO;
 import uol.compass.school.dto.response.MessageResponseDTO;
 import uol.compass.school.dto.response.ResponsibleDTO;
 import uol.compass.school.dto.response.StudentDTO;
+import uol.compass.school.dto.response.StudentNameDTO;
 import uol.compass.school.entity.Responsible;
 import uol.compass.school.entity.Student;
 import uol.compass.school.repository.ResponsibleRepository;
@@ -173,17 +174,17 @@ class ResponsibleServiceImplTest {
     void FindAllFromResponsibleAndThenReturnAllStudents() {
         Long id = 1L;
         Responsible expectedResponsible = ResponsibleUtils.createResponsibleWithStudents();
-        StudentDTO studentDTO = StudentUtils.createStudentDTO();
+        StudentNameDTO studentNameDTO = StudentUtils.createStudentNameDTO();
 
         when(responsibleRepository.findById(id)).thenReturn(Optional.of(expectedResponsible));
         for (Student student : expectedResponsible.getStudents()) {
-            when(modelMapper.map(student, StudentDTO.class))
-                    .thenReturn(studentDTO);
+            when(modelMapper.map(student, StudentNameDTO.class))
+                    .thenReturn(studentNameDTO);
         }
 
-        Set<StudentDTO> allStudents = responsibleService.findAllStudents(id);
+        Set<StudentNameDTO> allStudents = responsibleService.findAllStudents(id);
 
-        assertEquals(Collections.singleton(studentDTO), allStudents);;;
+        assertEquals(Collections.singleton(studentNameDTO), allStudents);;;
     }
 
 

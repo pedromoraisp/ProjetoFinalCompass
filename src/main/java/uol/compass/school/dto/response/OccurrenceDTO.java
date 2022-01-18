@@ -25,7 +25,7 @@ public class OccurrenceDTO {
 
     private OccurrenceType occurrenceType;
 
-    private StudentDTO student;
+    private StudentNameDTO student;
 }
 
 	

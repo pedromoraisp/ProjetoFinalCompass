@@ -1,6 +1,5 @@
 package uol.compass.school.service.impl;
 
-import net.bytebuddy.implementation.bytecode.Throw;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -8,9 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import uol.compass.school.dto.request.ClassroomRequestDTO;
 import uol.compass.school.dto.response.ClassroomDTO;
-import uol.compass.school.dto.response.CourseDTO;
 import uol.compass.school.dto.response.MessageResponseDTO;
-import uol.compass.school.dto.response.StudentNameDTO;
 import uol.compass.school.entity.Classroom;
 import uol.compass.school.entity.Course;
 import uol.compass.school.entity.Student;
@@ -36,8 +33,9 @@ public class ClassroomServiceImpl implements ClassroomService {
     private final ModelMapper modelMapper;
 
     @Autowired
-    public ClassroomServiceImpl(ClassroomRepository classroomRepository, StudentRepository studentRepository, ModelMapper modelMapper) {
+    public ClassroomServiceImpl(ClassroomRepository classroomRepository,CourseRepository courseRepository, StudentRepository studentRepository, ModelMapper modelMapper) {
         this.classroomRepository = classroomRepository;
+        this.courseRepository = courseRepository;
         this.studentRepository = studentRepository;
         this.modelMapper = modelMapper;
     }
@@ -95,12 +93,13 @@ public class ClassroomServiceImpl implements ClassroomService {
     @Override
     public MessageResponseDTO linkACourse(Long classroomId, Long courseId) {
         Classroom classroom = checkIfClassroomExists(classroomId);
-
         Course course = checkIfCourseExists(courseId);
 
-        Set<Course> courses = new HashSet<>(classroom.getCourses());
-        courses.add(course);
-        classroom.setCourses(courses);
+        if(!(classroom.getCourses() == null)) {
+            Set<Course> courses = new HashSet<>(classroom.getCourses());
+            courses.add(course);
+            classroom.setCourses(courses);
+        }
 
         classroomRepository.save(classroom);
 
@@ -112,17 +111,17 @@ public class ClassroomServiceImpl implements ClassroomService {
     @Override
     public MessageResponseDTO unlinkACourse(Long classroomId, Long courseId) {
         Classroom classroom = checkIfClassroomExists(classroomId);
-
         Course course = checkIfCourseExists(courseId);
 
-        if(classroom.getCourses().contains(course)){
-            Set<Course> courses = new HashSet<>(classroom.getCourses());
-            courses.remove(course);
-            classroom.setCourses(courses);
-        } else {
-            new ResponseStatusException(HttpStatus.NOT_FOUND, "This course is not linked to the class");
+        if(!(classroom.getCourses() == null)) {
+            if (classroom.getCourses().contains(course)) {
+                Set<Course> courses = new HashSet<>(classroom.getCourses());
+                courses.remove(course);
+                classroom.setCourses(courses);
+            } else {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "This course is not linked to the class");
+            }
         }
-
 
         classroomRepository.save(classroom);
 
@@ -131,26 +130,16 @@ public class ClassroomServiceImpl implements ClassroomService {
                 .build();
     }
 
-      @Override
-      public Set<CourseDTO> getAllCourses(Long id) {
-          Classroom classroom = checkIfClassroomExists(id);
-
-          if (!(classroom.getStudents() == null)) {
-              return classroom.getCourses().stream().map(course -> modelMapper.map(course, CourseDTO.class)).collect(Collectors.toSet());
-          } else {
-              return new HashSet<>();
-          }
-    }
-
     @Override
     public MessageResponseDTO linkAStudent(Long classroomId, Long studentId) {
         Classroom classroom = checkIfClassroomExists(classroomId);
-
         Student student = checkIfStudentExists(studentId);
 
-        Set<Student> students = new HashSet<>(classroom.getStudents());
-        students.add(student);
-        classroom.setStudents(students);
+        if(!(classroom.getStudents() == null)) {
+            Set<Student> students = new HashSet<>(classroom.getStudents());
+            students.add(student);
+            classroom.setStudents(students);
+        }
 
         classroomRepository.save(classroom);
 
@@ -162,11 +151,16 @@ public class ClassroomServiceImpl implements ClassroomService {
     @Override
     public MessageResponseDTO unlinkAStudent(Long classroomId, Long studentId) {
         Classroom classroom = checkIfClassroomExists(classroomId);
-
         Student student = checkIfStudentExists(studentId);
 
-        if (!(classroom.getStudents() == null)) {
-            classroom.getStudents().remove(student);
+        if(!(classroom.getStudents() == null)) {
+            if (classroom.getStudents().contains(student)) {
+                Set<Student> students = new HashSet<>(classroom.getStudents());
+                students.remove(student);
+                classroom.setStudents(students);
+            } else {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "This student is not linked to the class");
+            }
         }
 
         classroomRepository.save(classroom);
@@ -174,17 +168,6 @@ public class ClassroomServiceImpl implements ClassroomService {
         return MessageResponseDTO.builder()
                 .message(String.format("Classroom with id %s was unlinked to the student with id %s successfully", classroom.getId(), student.getId()))
                 .build();
-    }
-
-    @Override
-    public Set<StudentNameDTO> getAllStudents(Long id) {
-        Classroom classroom = checkIfClassroomExists(id);
-
-        if (!(classroom.getStudents() == null)) {
-            return classroom.getStudents().stream().map(student -> modelMapper.map(student, StudentNameDTO.class)).collect(Collectors.toSet());
-        } else {
-            return new HashSet<>();
-        }
     }
 
     private Classroom checkIfClassroomExists(Long id) {

@@ -42,7 +42,7 @@ class UserServiceImplTest {
         User user = UserUtils.createUser();
         String expectedMessage = "User jenniferuser with id 1 successfully created";
 
-        when(userRepository.findByEmailOrUsername(userRequestDTO.getEmail(), userRequestDTO.getUsername()))
+        when(userRepository.findByUsername(userRequestDTO.getUsername()))
                 .thenReturn(Optional.empty());
         when(modelMapper.map(userRequestDTO, User.class)).thenReturn(user);
         when(passwordEncoder.encode(user.getPassword())).thenReturn(user.getPassword());
@@ -58,7 +58,7 @@ class UserServiceImplTest {
         UserRequestDTO userRequestDTO = UserUtils.createUserRequestDTO();
         User user = UserUtils.createUser();
 
-        when(userRepository.findByEmailOrUsername(userRequestDTO.getEmail(), userRequestDTO.getUsername()))
+        when(userRepository.findByUsername(userRequestDTO.getUsername()))
                 .thenReturn(Optional.of(user));
 
         assertThrows(UserAlreadyExistsException.class, () -> userService.create(userRequestDTO));

@@ -25,11 +25,7 @@ public interface ClassroomService {
 
     MessageResponseDTO unlinkACourse(Long classroomId, Long courseId);
 
-    Set<CourseDTO> getAllCourses(Long id);
-
     MessageResponseDTO linkAStudent(Long classroomId, Long studentId);
 
     MessageResponseDTO unlinkAStudent(Long classroomId, Long studentId);
-
-    Set<StudentNameDTO> getAllStudents(Long id);
 }

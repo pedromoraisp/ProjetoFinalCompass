@@ -153,7 +153,7 @@ class ClassroomControllerTest {
     }
 
     @Test
-    void whenPOSTToUnlinkAStudentIsCalledThenReturnOKStatus() throws Exception {
+    void whenDELETEToUnlinkAStudentIsCalledThenReturnOKStatus() throws Exception {
         Long studentId = 1L;
         Long classroomId = 1L;
         MessageResponseDTO expectedMessageResponse = MessageResponseDTO.builder()
@@ -169,15 +169,34 @@ class ClassroomControllerTest {
     }
 
     @Test
-    void whenGETToGetAllStudentsIsCalledThenReturnOKStatus() throws Exception {
-        Long id = 1L;
-        StudentNameDTO studentNameDTO = StudentUtils.createStudentNameDTO();
+    void whenPOSTToLinkACourseIsCalledThenReturnOKStatus() throws Exception {
+        Long courseId = 1L;
+        Long classroomId = 1L;
+        MessageResponseDTO expectedMessageResponse = MessageResponseDTO.builder()
+                .message("Classroom with id 1 was linked to the course with id 1 successfully")
+                .build();
 
-        when(classroomService.getAllStudents(id)).thenReturn(Collections.singleton(studentNameDTO));
+        when(classroomService.linkACourse(classroomId, courseId)).thenReturn(expectedMessageResponse);
 
-        mockMvc.perform(get("/api/v1/classrooms/"+ id +"/students")
+        mockMvc.perform(post("/api/v1/classrooms/"+ classroomId +"/courses/" + courseId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.[0]name", is(studentNameDTO.getName())));
+                .andExpect(jsonPath("$.message", is(expectedMessageResponse.getMessage())));
+    }
+
+    @Test
+    void whenDELETEToUnlinkACourseIsCalledThenReturnOKStatus() throws Exception {
+        Long courseId = 1L;
+        Long classroomId = 1L;
+        MessageResponseDTO expectedMessageResponse = MessageResponseDTO.builder()
+                .message("Classroom with id 1 was unlinked to the course with id 1 successfully")
+                .build();
+
+        when(classroomService.unlinkACourse(classroomId, courseId)).thenReturn(expectedMessageResponse);
+
+        mockMvc.perform(delete("/api/v1/classrooms/"+ classroomId +"/courses/" + courseId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message", is(expectedMessageResponse.getMessage())));
     }
 }

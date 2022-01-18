@@ -35,13 +35,14 @@ public class ClassroomUtils {
                 .build();
     }
 
-    public static Classroom createClassroomWithStudents() {
+    public static Classroom createClassroomWithStudentsAndCourses() {
         return Classroom.builder()
                 .id(1L)
                 .finalDate(LocalDate.now())
                 .finalDate(LocalDate.now())
                 .status(true)
                 .students(Collections.singleton(StudentUtils.createStudent()))
+                .courses(Collections.singleton(CourseUtils.createCourse()))
                 .build();
     }
 }

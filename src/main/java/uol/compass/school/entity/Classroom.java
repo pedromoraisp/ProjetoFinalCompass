@@ -28,15 +28,20 @@ public class Classroom {
     @Column(nullable = false)
     private LocalDate finalDate;
 
-
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+    })
     @JoinTable(name = "classroom_student",
             joinColumns = @JoinColumn(name = "classroom_id"),
             inverseJoinColumns = @JoinColumn(name = "student_id")
     )
     private Set<Student> students = new HashSet<>();
 
-    @ManyToMany
+    @ManyToMany(cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+    })
     @JoinTable(name = "classroom_course",
             joinColumns = @JoinColumn(name = "classroom_id"),
             inverseJoinColumns = @JoinColumn(name = "course_id")
