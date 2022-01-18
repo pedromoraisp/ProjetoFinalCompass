@@ -142,22 +142,4 @@ public class CourseServiceImplTest {
 
         assertEquals(expectedMessageResponse, messageResponseDTO);
     }
-
-    @Test
-    void whenCourseIdAndEducatorIdAreInformedThenTheyShouldBeUnlinked() {
-        Long id = 1L;
-        Course expectedCourse = CourseUtils.createCourse();
-        Educator expectedEducator = EducatorUtils.createEducator();
-        MessageResponseDTO expectedMessageResponse = MessageResponseDTO.builder()
-                .message("Course with id 1 was unlinked to the educator with id 1 successfully")
-                .build();
-
-        when(courseRepository.findById(id)).thenReturn(Optional.of(expectedCourse));
-        when(educatorRepository.findById(id)).thenReturn(Optional.of(expectedEducator));
-
-        MessageResponseDTO messageResponseDTO = courseService.unlinkAEducator(id, id);
-
-        assertEquals(expectedMessageResponse, messageResponseDTO);
-    }
-
 }
