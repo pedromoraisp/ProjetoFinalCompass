@@ -2,12 +2,9 @@ package uol.compass.school.service;
 
 import uol.compass.school.dto.request.ClassroomRequestDTO;
 import uol.compass.school.dto.response.ClassroomDTO;
-import uol.compass.school.dto.response.CourseDTO;
 import uol.compass.school.dto.response.MessageResponseDTO;
-import uol.compass.school.dto.response.StudentNameDTO;
 
 import java.util.List;
-import java.util.Set;
 
 public interface ClassroomService {
 

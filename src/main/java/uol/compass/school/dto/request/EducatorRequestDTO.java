@@ -25,7 +25,6 @@ public class EducatorRequestDTO {
     private Gender gender;
 
     @CPF
+    @NotBlank
     private String cpf;
-
-
 }

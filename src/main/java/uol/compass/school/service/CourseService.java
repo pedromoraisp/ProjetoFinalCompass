@@ -5,7 +5,6 @@ import uol.compass.school.dto.response.CourseDTO;
 import uol.compass.school.dto.response.MessageResponseDTO;
 
 import java.util.List;
-import java.util.Set;
 
 public interface CourseService {
 
@@ -22,5 +21,4 @@ public interface CourseService {
     MessageResponseDTO linkAEducator(Long courseId, Long educatorId);
 
     MessageResponseDTO unlinkAEducator(Long courseId, Long educatorId);
-
-    }
+}

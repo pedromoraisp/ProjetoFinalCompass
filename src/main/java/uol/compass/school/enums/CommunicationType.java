@@ -6,7 +6,10 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum CommunicationType {
-	VERBAL,
-	ESCRITO,
-	DIRETA_AOS_PAIS
+
+	VERBAL("VERBAL"),
+	WRITTEN("WRITTEN"),
+	TO_PARENTS("TO PARENTS");
+
+	private String description;
 }

@@ -27,6 +27,7 @@ public class StudentUtils {
                 .school("Escola Municipal de Bela Uberlândia")
                 .build();
     }
+
     public static Student createStudentWithOccurrences() {
         return Student.builder()
                 .id(1L)

@@ -129,7 +129,7 @@ public class CourseServiceImplTest {
     @Test
     void whenCourseIdAndEducatorIdAreInformedThenTheyShouldBeLinked() {
         Long id = 1L;
-        Course expectedCourse= CourseUtils.createCourse();
+        Course expectedCourse = CourseUtils.createCourse();
         Educator expectedEducator = EducatorUtils.createEducator();
         MessageResponseDTO expectedMessageResponse = MessageResponseDTO.builder()
                 .message("Course with id 1 was linked to the educator with id 1 successfully")
@@ -146,7 +146,7 @@ public class CourseServiceImplTest {
     @Test
     void whenCourseIdAndEducatorIdAreInformedThenTheyShouldBeUnlinked() {
         Long id = 1L;
-        Course expectedCourse= CourseUtils.createCourse();
+        Course expectedCourse = CourseUtils.createCourse();
         Educator expectedEducator = EducatorUtils.createEducator();
         MessageResponseDTO expectedMessageResponse = MessageResponseDTO.builder()
                 .message("Course with id 1 was unlinked to the educator with id 1 successfully")

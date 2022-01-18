@@ -3,9 +3,7 @@ package uol.compass.school.service;
 import uol.compass.school.dto.request.ResponsibleRequestDTO;
 import uol.compass.school.dto.response.MessageResponseDTO;
 import uol.compass.school.dto.response.ResponsibleDTO;
-import uol.compass.school.dto.response.StudentDTO;
 import uol.compass.school.dto.response.StudentNameDTO;
-
 
 import java.util.List;
 import java.util.Set;
@@ -22,5 +20,9 @@ public interface ResponsibleService {
 
     MessageResponseDTO deleteById(Long id);
 
+    MessageResponseDTO linkResponsibleToStudent(Long responsibleId, Long studentId);
+
     Set<StudentNameDTO> findAllStudents(Long id);
+
+    MessageResponseDTO linkResponsibleToUser(Long responsibleId, Long userId);
 }

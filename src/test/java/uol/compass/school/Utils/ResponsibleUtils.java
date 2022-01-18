@@ -28,7 +28,7 @@ public class ResponsibleUtils {
                 .build();
     }
 
-    public static ResponsibleDTO createResponsibleDTO(){
+    public static ResponsibleDTO createResponsibleDTO() {
         return ResponsibleDTO.builder()
                 .id(1L)
                 .name("Edivan Alves")

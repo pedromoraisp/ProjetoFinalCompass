@@ -24,7 +24,8 @@ public class Educator {
     
     @Column
     private String cpf;
-    
+
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Gender gender;
 

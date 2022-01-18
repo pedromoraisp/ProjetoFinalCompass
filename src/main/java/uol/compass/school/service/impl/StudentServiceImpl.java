@@ -18,10 +18,7 @@ import uol.compass.school.repository.UserRepository;
 import uol.compass.school.service.StudentService;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -103,10 +100,10 @@ public class StudentServiceImpl implements StudentService {
             return occurrences.stream().map(occurrence -> modelMapper.map(occurrence, OccurrenceDTO.class))
                     .collect(Collectors.toList());
         } else {
-            if(initialDate == null) {
+            if (initialDate == null) {
                 initialDate = LocalDate.now().minusYears(5);
             }
-            if(finalDate == null) {
+            if (finalDate == null) {
                 finalDate = LocalDate.now();
             }
 
@@ -129,8 +126,14 @@ public class StudentServiceImpl implements StudentService {
         String loggedUsername = getLoggedUsername();
 
         Optional<User> user = userRepository.findByUsername(loggedUsername);
-        if(user.isPresent()) {
-            Set<Student> students = user.get().getResponsible().getStudents();
+        if (user.isPresent()) {
+            Set<Student> students;
+            if(user.get().getResponsible().getStudents() == null) {
+                students = new HashSet<>();
+            } else {
+                students = user.get().getResponsible().getStudents();
+            }
+
             return students.stream().map(student -> {
                 StudentOccurrenceDTO studentOccurrenceDTO = modelMapper.map(student, StudentOccurrenceDTO.class);
                 List<OccurrenceToStudentDTO> occurrenceDTO = student.getOccurrences().stream().map(
@@ -146,7 +149,7 @@ public class StudentServiceImpl implements StudentService {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         String username =
-                (principal instanceof UserDetails) ? ((UserDetails)principal).getUsername() : principal.toString();
+                (principal instanceof UserDetails) ? ((UserDetails) principal).getUsername() : principal.toString();
 
         return username;
     }
@@ -155,4 +158,5 @@ public class StudentServiceImpl implements StudentService {
         return studentRepository.findById(id)
                 .orElseThrow(() ->
                         new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Unable to find student with id %s", id)));
-    }}
+    }
+}

@@ -14,8 +14,8 @@ public class OccurrenceUtils {
     public static Occurrence createOccurrence() {
         return Occurrence.builder()
                 .id(1L)
-                .communicationType(CommunicationType.ESCRITO)
-                .occurrenceType(OccurrenceType.DESOBEDIENCIA)
+                .communicationType(CommunicationType.WRITTEN)
+                .occurrenceType(OccurrenceType.DISOBEDIENCE)
                 .date(LocalDate.now())
                 .description("Se negou a ficar sentado")
                 .build();
@@ -24,8 +24,8 @@ public class OccurrenceUtils {
     public static OccurrenceDTO createOccurrenceDTO() {
         return OccurrenceDTO.builder()
                 .id(1L)
-                .communicationType(CommunicationType.ESCRITO)
-                .occurrenceType(OccurrenceType.DESOBEDIENCIA)
+                .communicationType(CommunicationType.WRITTEN)
+                .occurrenceType(OccurrenceType.DISOBEDIENCE)
                 .date(LocalDate.now())
                 .description("Se negou a ficar sentado")
                 .build();
@@ -33,8 +33,8 @@ public class OccurrenceUtils {
 
     public static OccurrenceRequestDTO createOccurrenceRequestDTO() {
         return OccurrenceRequestDTO.builder()
-                .communicationType(CommunicationType.ESCRITO)
-                .occurrenceType(OccurrenceType.DESOBEDIENCIA)
+                .communicationType(CommunicationType.WRITTEN)
+                .occurrenceType(OccurrenceType.DISOBEDIENCE)
                 .date(LocalDate.now())
                 .description("Se negou a ficar sentado")
                 .build();
@@ -44,8 +44,8 @@ public class OccurrenceUtils {
         return OccurrenceToStudentDTO.builder()
                 .date(LocalDate.now())
                 .description("Se negou a ficar sentado")
-                .communicationType(CommunicationType.ESCRITO)
-                .occurrenceType(OccurrenceType.DESOBEDIENCIA)
+                .communicationType(CommunicationType.WRITTEN)
+                .occurrenceType(OccurrenceType.DISOBEDIENCE)
                 .build();
     }
 }

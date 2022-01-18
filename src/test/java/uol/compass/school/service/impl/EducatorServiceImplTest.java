@@ -1,13 +1,5 @@
 package uol.compass.school.service.impl;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.when;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -15,13 +7,20 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import org.springframework.web.server.ResponseStatusException;
-
 import uol.compass.school.Utils.EducatorUtils;
 import uol.compass.school.dto.request.EducatorRequestDTO;
 import uol.compass.school.dto.response.EducatorDTO;
 import uol.compass.school.dto.response.MessageResponseDTO;
 import uol.compass.school.entity.Educator;
 import uol.compass.school.repository.EducatorRepository;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class EducatorServiceImplTest {
@@ -37,8 +36,8 @@ class EducatorServiceImplTest {
 
     @Test
     void whenEducatorIsInformedThenShouldBeCreated() {
-    	EducatorRequestDTO educatorRequestDTO = EducatorUtils.createEducatorRequestDTO();
-    	Educator expectedEducator = EducatorUtils.createEducator();
+        EducatorRequestDTO educatorRequestDTO = EducatorUtils.createEducatorRequestDTO();
+        Educator expectedEducator = EducatorUtils.createEducator();
         MessageResponseDTO expectedMessageResponse = MessageResponseDTO.builder()
                 .message("Educator Mariana Moreira with id 1 was successfully created")
                 .build();
@@ -53,8 +52,8 @@ class EducatorServiceImplTest {
 
     @Test
     void whenFindAllWithoutNameIsCalledThenReturnAllEducators() {
-    	Educator expectedEducator = EducatorUtils.createEducator();
-    	EducatorDTO expectedEducatorDTO = EducatorUtils.createEducatorDTO();
+        Educator expectedEducator = EducatorUtils.createEducator();
+        EducatorDTO expectedEducatorDTO = EducatorUtils.createEducatorDTO();
         List<EducatorDTO> expectedEducatorsDTO = Collections.singletonList(expectedEducatorDTO);
 
         when(educatorRepository.findAll()).thenReturn(Collections.singletonList(expectedEducator));

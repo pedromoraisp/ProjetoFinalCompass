@@ -33,7 +33,7 @@ public class ClassroomServiceImpl implements ClassroomService {
     private final ModelMapper modelMapper;
 
     @Autowired
-    public ClassroomServiceImpl(ClassroomRepository classroomRepository,CourseRepository courseRepository, StudentRepository studentRepository, ModelMapper modelMapper) {
+    public ClassroomServiceImpl(ClassroomRepository classroomRepository, CourseRepository courseRepository, StudentRepository studentRepository, ModelMapper modelMapper) {
         this.classroomRepository = classroomRepository;
         this.courseRepository = courseRepository;
         this.studentRepository = studentRepository;
@@ -95,7 +95,7 @@ public class ClassroomServiceImpl implements ClassroomService {
         Classroom classroom = checkIfClassroomExists(classroomId);
         Course course = checkIfCourseExists(courseId);
 
-        if(!(classroom.getCourses() == null)) {
+        if (!(classroom.getCourses() == null)) {
             Set<Course> courses = new HashSet<>(classroom.getCourses());
             courses.add(course);
             classroom.setCourses(courses);
@@ -113,7 +113,7 @@ public class ClassroomServiceImpl implements ClassroomService {
         Classroom classroom = checkIfClassroomExists(classroomId);
         Course course = checkIfCourseExists(courseId);
 
-        if(!(classroom.getCourses() == null)) {
+        if (!(classroom.getCourses() == null)) {
             if (classroom.getCourses().contains(course)) {
                 Set<Course> courses = new HashSet<>(classroom.getCourses());
                 courses.remove(course);
@@ -135,7 +135,7 @@ public class ClassroomServiceImpl implements ClassroomService {
         Classroom classroom = checkIfClassroomExists(classroomId);
         Student student = checkIfStudentExists(studentId);
 
-        if(!(classroom.getStudents() == null)) {
+        if (!(classroom.getStudents() == null)) {
             Set<Student> students = new HashSet<>(classroom.getStudents());
             students.add(student);
             classroom.setStudents(students);
@@ -153,7 +153,7 @@ public class ClassroomServiceImpl implements ClassroomService {
         Classroom classroom = checkIfClassroomExists(classroomId);
         Student student = checkIfStudentExists(studentId);
 
-        if(!(classroom.getStudents() == null)) {
+        if (!(classroom.getStudents() == null)) {
             if (classroom.getStudents().contains(student)) {
                 Set<Student> students = new HashSet<>(classroom.getStudents());
                 students.remove(student);

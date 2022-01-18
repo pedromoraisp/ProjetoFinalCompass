@@ -1,10 +1,10 @@
 package uol.compass.school.service;
 
-import java.util.List;
-
 import uol.compass.school.dto.request.EducatorRequestDTO;
 import uol.compass.school.dto.response.EducatorDTO;
 import uol.compass.school.dto.response.MessageResponseDTO;
+
+import java.util.List;
 
 public interface EducatorService {
 
@@ -17,6 +17,4 @@ public interface EducatorService {
     MessageResponseDTO update(Long id, EducatorRequestDTO educatorRequestDTO);
 
     MessageResponseDTO deleteById(Long id);
-
-    
 }

@@ -10,14 +10,11 @@ import uol.compass.school.dto.response.CourseDTO;
 import uol.compass.school.dto.response.MessageResponseDTO;
 import uol.compass.school.entity.Course;
 import uol.compass.school.entity.Educator;
-import uol.compass.school.entity.Student;
 import uol.compass.school.repository.CourseRepository;
 import uol.compass.school.repository.EducatorRepository;
 import uol.compass.school.service.CourseService;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -95,14 +92,11 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public MessageResponseDTO linkAEducator(Long courseId, Long educatorId) {
         Course course = checkIfCourseExists(courseId);
-
         Educator educator = checkIfEducatorExists(educatorId);
 
-        if (!(course.getEducators() == null)) {
-            course.getEducators().add(educator);
-        }
+        educator.setCourse(course);
 
-        courseRepository.save(course);
+        educatorRepository.save(educator);
 
         return MessageResponseDTO.builder()
                 .message(String.format("Course with id %s was linked to the educator with id %s successfully", course.getId(), educator.getId()))
@@ -114,16 +108,13 @@ public class CourseServiceImpl implements CourseService {
         Course course = checkIfCourseExists(courseId);
         Educator educator = checkIfEducatorExists(educatorId);
 
-        if (!(course.getEducators() == null)) {
-            if (course.getEducators().contains(educator)) {
-                course.getEducators().remove(educator);
-            } else {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "This educator is not linked to the course");
-            }
+        if(educator.getCourse().getId() == educatorId) {
+            educator.setCourse(null);
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This educator is not linked to this course");
         }
 
-
-        courseRepository.save(course);
+        educatorRepository.save(educator);
 
         return MessageResponseDTO.builder()
                 .message(String.format("Course with id %s was unlinked to the educator with id %s successfully", course.getId(), educator.getId()))

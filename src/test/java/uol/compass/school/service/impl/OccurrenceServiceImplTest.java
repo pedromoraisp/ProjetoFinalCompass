@@ -42,8 +42,8 @@ class OccurrenceServiceImplTest {
 
     @Test
     void whenOccurrenceIsInformedThenShouldBeCreated() {
-    	OccurrenceRequestDTO occurrenceRequestDTO = OccurrenceUtils.createOccurrenceRequestDTO();
-    	Occurrence expectedOccurrence = OccurrenceUtils.createOccurrence();
+        OccurrenceRequestDTO occurrenceRequestDTO = OccurrenceUtils.createOccurrenceRequestDTO();
+        Occurrence expectedOccurrence = OccurrenceUtils.createOccurrence();
         MessageResponseDTO expectedMessageResponse = MessageResponseDTO.builder()
                 .message("Occurrence with id 1 was successfully created")
                 .build();
@@ -58,8 +58,8 @@ class OccurrenceServiceImplTest {
 
     @Test
     void whenFindAllWithoutParamIsCalledThenReturnAllOccurrences() {
-    	Occurrence expectedOccurrence = OccurrenceUtils.createOccurrence();
-    	OccurrenceDTO expectedOccurrenceDTO = OccurrenceUtils.createOccurrenceDTO();
+        Occurrence expectedOccurrence = OccurrenceUtils.createOccurrence();
+        OccurrenceDTO expectedOccurrenceDTO = OccurrenceUtils.createOccurrenceDTO();
         List<OccurrenceDTO> expectedOccurrencesDTO = Collections.singletonList(expectedOccurrenceDTO);
 
         when(occurrenceRepository.findAll()).thenReturn(Collections.singletonList(expectedOccurrence));

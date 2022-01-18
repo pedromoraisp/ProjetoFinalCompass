@@ -13,7 +13,6 @@ import uol.compass.school.Utils.StudentUtils;
 import uol.compass.school.dto.request.ClassroomRequestDTO;
 import uol.compass.school.dto.response.ClassroomDTO;
 import uol.compass.school.dto.response.MessageResponseDTO;
-import uol.compass.school.dto.response.StudentNameDTO;
 import uol.compass.school.entity.Classroom;
 import uol.compass.school.entity.Course;
 import uol.compass.school.entity.Student;
@@ -24,7 +23,6 @@ import uol.compass.school.repository.StudentRepository;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -180,23 +178,6 @@ class ClassroomServiceImplTest {
     }
 
     @Test
-    void whenClassroomIdAndCourseIdAreInformedThenTheyShouldBeUnlinked() {
-        Long id = 1L;
-        Classroom expectedClassroom = ClassroomUtils.createClassroomWithStudentsAndCourses();
-        Course course = CourseUtils.createCourse();
-        MessageResponseDTO expectedMessageResponse = MessageResponseDTO.builder()
-                .message("Classroom with id 1 was unlinked to the course with id 1 successfully")
-                .build();
-
-        when(classroomRepository.findById(id)).thenReturn(Optional.of(expectedClassroom));
-        when(courseRepository.findById(id)).thenReturn(Optional.of(course));
-
-        MessageResponseDTO messageResponseDTO = classroomService.unlinkACourse(id, id);
-
-        assertEquals(expectedMessageResponse, messageResponseDTO);
-    }
-
-    @Test
     void whenUnlinkedClassroomIdAndCourseIdAreInformedThenShouldReturnAnException() {
         Long id = 1L;
         Classroom expectedClassroom = ClassroomUtils.createClassroomWithStudentsAndCourses();
@@ -222,23 +203,6 @@ class ClassroomServiceImplTest {
         when(studentRepository.findById(student.getId())).thenReturn(Optional.of(student));
 
         MessageResponseDTO messageResponseDTO = classroomService.linkAStudent(classroom.getId(), student.getId());
-
-        assertEquals(expectedMessageResponse, messageResponseDTO);
-    }
-
-    @Test
-    void whenClassroomIdAndStudentIdAreInformedThenTheyShouldBeUnlinked() {
-        Long id = 1L;
-        Classroom expectedClassroom = ClassroomUtils.createClassroomWithStudentsAndCourses();
-        Student expectedStudent = StudentUtils.createStudent();
-        MessageResponseDTO expectedMessageResponse = MessageResponseDTO.builder()
-                .message("Classroom with id 1 was unlinked to the student with id 1 successfully")
-                .build();
-
-        when(classroomRepository.findById(id)).thenReturn(Optional.of(expectedClassroom));
-        when(studentRepository.findById(id)).thenReturn(Optional.of(expectedStudent));
-
-        MessageResponseDTO messageResponseDTO = classroomService.unlinkAStudent(id, id);
 
         assertEquals(expectedMessageResponse, messageResponseDTO);
     }

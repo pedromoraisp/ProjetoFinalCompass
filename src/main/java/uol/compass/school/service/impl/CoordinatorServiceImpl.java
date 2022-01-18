@@ -9,7 +9,10 @@ import uol.compass.school.dto.request.CoordinatorRequestDTO;
 import uol.compass.school.dto.response.CoordinatorDTO;
 import uol.compass.school.dto.response.MessageResponseDTO;
 import uol.compass.school.entity.Coordinator;
+import uol.compass.school.entity.Responsible;
+import uol.compass.school.entity.User;
 import uol.compass.school.repository.CoordinatorRepository;
+import uol.compass.school.repository.UserRepository;
 import uol.compass.school.service.CoordinatorService;
 
 import java.util.List;
@@ -20,11 +23,14 @@ public class CoordinatorServiceImpl implements CoordinatorService {
 
     private CoordinatorRepository coordinatorRepository;
 
+    private UserRepository userRepository;
+
     private ModelMapper modelMapper;
 
     @Autowired
-    public CoordinatorServiceImpl(CoordinatorRepository coordinatorRepository, ModelMapper modelMapper) {
+    public CoordinatorServiceImpl(CoordinatorRepository coordinatorRepository, UserRepository userRepository, ModelMapper modelMapper) {
         this.coordinatorRepository = coordinatorRepository;
+        this.userRepository = userRepository;
         this.modelMapper = modelMapper;
     }
 
@@ -74,8 +80,27 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                 .build();
     }
 
+    @Override
+    public MessageResponseDTO linkCoordinatorToUser(Long coordinatorId, Long userId) {
+        Coordinator coordinator = checkIfCoordinatorExists(coordinatorId);
+        User user = verifyIfUserExists(userId);
+
+        coordinator.setUser(user);
+
+        coordinatorRepository.save(coordinator);
+
+        return MessageResponseDTO.builder()
+                .message(String.format("Coordinator with id %s was linked to the user with id %s successfully", coordinator.getId(), user.getId()))
+                .build();
+    }
+
     private Coordinator checkIfCoordinatorExists(Long id) {
         return coordinatorRepository.findById(id).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Unable to find coordinator with id %s", id)));
+    }
+
+    private User verifyIfUserExists(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Unable to find user with id %s", id)));
     }
 }

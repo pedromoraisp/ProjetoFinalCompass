@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 import uol.compass.school.dto.request.ResponsibleRequestDTO;
 import uol.compass.school.dto.response.MessageResponseDTO;
 import uol.compass.school.dto.response.ResponsibleDTO;
-import uol.compass.school.dto.response.StudentDTO;
 import uol.compass.school.dto.response.StudentNameDTO;
 import uol.compass.school.service.ResponsibleService;
 
@@ -58,5 +57,15 @@ public class ResponsibleController {
     @DeleteMapping("/{id}")
     public MessageResponseDTO deleteById(@PathVariable Long id) {
         return this.responsibleService.deleteById(id);
+    }
+
+    @PostMapping("{responsibleId}/students/{studentId}")
+    public MessageResponseDTO linkResponsibleToStudent(@PathVariable Long responsibleId, @PathVariable Long studentId) {
+        return responsibleService.linkResponsibleToStudent(responsibleId, studentId);
+    }
+
+    @PostMapping("{responsibleId}/users/{userId}")
+    public MessageResponseDTO linkResponsibleToUser(@PathVariable Long responsibleId, @PathVariable Long userId) {
+        return responsibleService.linkResponsibleToUser(responsibleId, userId);
     }
 }

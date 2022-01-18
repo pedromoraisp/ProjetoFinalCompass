@@ -6,8 +6,11 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum OccurrenceType {
-	AGRESSAO_FISICA,
-	AGRESSAO_VERBAL,
-	DESOBEDIENCIA,
-	OUTROS
+
+	PHYSICAL_AGGRESSION("PHYSICAL AGGRESSION"),
+	VERBAL_AGGRESSION("VERBAL AGGRESSION"),
+	DISOBEDIENCE("DISOBEDIENCE"),
+	OTHERS("OTHERS");
+
+	private String description;
 }

@@ -5,12 +5,12 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import uol.compass.school.dto.request.ClassroomRequestDTO;
-import uol.compass.school.dto.response.*;
+import uol.compass.school.dto.response.ClassroomDTO;
+import uol.compass.school.dto.response.MessageResponseDTO;
 import uol.compass.school.service.ClassroomService;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/api/v1/classrooms")

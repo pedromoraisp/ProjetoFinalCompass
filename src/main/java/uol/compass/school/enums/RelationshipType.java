@@ -12,4 +12,3 @@ public enum RelationshipType {
 
     private String description;
 }
-

@@ -8,7 +8,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -29,6 +28,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private static final String EDUCATORS_API_URL = "/api/v1/educators/**";
     private static final String OCCURRENCES_API_URL = "/api/v1/occurrences/**";
     private static final String RESPONSIBLE_API_URL = "/api/v1/responsible/**";
+    private static final String COORDINATORS_API_URL = "/api/v1/coordinators/**";
 
     private static final String H2_CONSOLE_URL = "/h2-console/**";
 
@@ -68,8 +68,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
-                .authorizeRequests().antMatchers(USERS_API_URL, H2_CONSOLE_URL).permitAll()
-                .antMatchers(CLASSROOMS_API_URL, COURSES_API_URL, EDUCATORS_API_URL, OCCURRENCES_API_URL, RESPONSIBLE_API_URL).hasRole(ROLE_ADMIN)
+                .authorizeRequests().antMatchers("/api/v1/users/authenticate").permitAll()
+                .antMatchers(H2_CONSOLE_URL).permitAll()
+                .antMatchers(CLASSROOMS_API_URL, COURSES_API_URL, EDUCATORS_API_URL, OCCURRENCES_API_URL, RESPONSIBLE_API_URL, COORDINATORS_API_URL).hasRole(ROLE_ADMIN)
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)

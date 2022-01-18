@@ -47,4 +47,9 @@ public class CoordinatorController {
     public MessageResponseDTO delete(@PathVariable Long id) {
         return coordinatorService.delete(id);
     }
+
+    @PostMapping("{coordinatorId}/users/{userId}")
+    public MessageResponseDTO linkCoordinatorToUser(@PathVariable Long coordinatorId, @PathVariable Long userId) {
+        return coordinatorService.linkCoordinatorToUser(coordinatorId, userId);
+    }
 }

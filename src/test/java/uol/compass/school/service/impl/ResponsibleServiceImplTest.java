@@ -12,7 +12,6 @@ import uol.compass.school.Utils.StudentUtils;
 import uol.compass.school.dto.request.ResponsibleRequestDTO;
 import uol.compass.school.dto.response.MessageResponseDTO;
 import uol.compass.school.dto.response.ResponsibleDTO;
-import uol.compass.school.dto.response.StudentDTO;
 import uol.compass.school.dto.response.StudentNameDTO;
 import uol.compass.school.entity.Responsible;
 import uol.compass.school.entity.Student;
@@ -184,7 +183,9 @@ class ResponsibleServiceImplTest {
 
         Set<StudentNameDTO> allStudents = responsibleService.findAllStudents(id);
 
-        assertEquals(Collections.singleton(studentNameDTO), allStudents);;;
+        assertEquals(Collections.singleton(studentNameDTO), allStudents);
+        ;
+        ;
     }
 
 

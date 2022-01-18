@@ -11,10 +11,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
-import uol.compass.school.Utils.ClassroomUtils;
 import uol.compass.school.Utils.CoordinatorUtils;
 import uol.compass.school.Utils.JsonUtils;
-import uol.compass.school.dto.request.ClassroomRequestDTO;
 import uol.compass.school.dto.request.CoordinatorRequestDTO;
 import uol.compass.school.dto.response.CoordinatorDTO;
 import uol.compass.school.dto.response.MessageResponseDTO;
@@ -23,7 +21,6 @@ import uol.compass.school.service.CoordinatorService;
 import java.util.Collections;
 
 import static org.hamcrest.core.Is.is;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -134,8 +131,6 @@ class CoordinatorControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message", is(expectedMessageResponse.getMessage())));
     }
-
-
 
 
 }

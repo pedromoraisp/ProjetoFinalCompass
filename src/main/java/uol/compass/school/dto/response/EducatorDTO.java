@@ -23,8 +23,4 @@ public class EducatorDTO {
     private String cpf;
 
     private CourseDTO course;
-
-    private String school;
-
-    private ClassroomDTO classroom;
 }

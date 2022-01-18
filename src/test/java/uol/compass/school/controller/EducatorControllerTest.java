@@ -47,7 +47,7 @@ class EducatorControllerTest {
 
     @Test
     void whenPOSTIsCalledThenShouldReturnCreatedStatus() throws Exception {
-    	EducatorRequestDTO expectedEducatorRequestDTO = EducatorUtils.createEducatorRequestDTO();
+        EducatorRequestDTO expectedEducatorRequestDTO = EducatorUtils.createEducatorRequestDTO();
         MessageResponseDTO expectedMessageResponse = MessageResponseDTO.builder()
                 .message("Educator Mariana with id 1 was successfully created")
                 .build();
@@ -63,7 +63,7 @@ class EducatorControllerTest {
 
     @Test
     void whenPOSTIsCalledWithIncorrectFieldThenShouldReturnBadRequestStatus() throws Exception {
-    	EducatorRequestDTO expectedEducatorRequestDTO = EducatorUtils.createEducatorRequestDTO();
+        EducatorRequestDTO expectedEducatorRequestDTO = EducatorUtils.createEducatorRequestDTO();
         expectedEducatorRequestDTO.setName(null);
 
         mockMvc.perform(post("/api/v1/educators")
@@ -74,7 +74,7 @@ class EducatorControllerTest {
 
     @Test
     void whenFindAllIsCalledThenShouldReturnOKStatus() throws Exception {
-    	EducatorDTO expectedEducatorDTO = EducatorUtils.createEducatorDTO();
+        EducatorDTO expectedEducatorDTO = EducatorUtils.createEducatorDTO();
 
         when(educatorService.findAll(null)).thenReturn(Collections.singletonList(expectedEducatorDTO));
 

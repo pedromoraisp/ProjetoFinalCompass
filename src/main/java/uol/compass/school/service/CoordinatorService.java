@@ -17,4 +17,6 @@ public interface CoordinatorService {
     MessageResponseDTO update(Long id, CoordinatorRequestDTO coordinatorRequestDTO);
 
     MessageResponseDTO delete(Long id);
+
+    MessageResponseDTO linkCoordinatorToUser(Long coordinatorId, Long userId);
 }

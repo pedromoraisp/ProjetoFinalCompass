@@ -15,7 +15,7 @@ public class EducatorUtils {
                 .cpf("53236854690")
                 .build();
     }
-   
+
     public static EducatorDTO createEducatorDTO() {
         return EducatorDTO.builder()
                 .id(1L)
@@ -27,7 +27,7 @@ public class EducatorUtils {
 
     public static EducatorRequestDTO createEducatorRequestDTO() {
         return EducatorRequestDTO.builder()
-        		.name("Mariana Moreira")
+                .name("Mariana Moreira")
                 .gender(Gender.FEMALE)
                 .cpf("566.748.876-09")
                 .build();

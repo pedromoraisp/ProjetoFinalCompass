@@ -4,8 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import uol.compass.school.dto.request.StudentRequestDTO;
 import uol.compass.school.dto.response.MessageResponseDTO;
@@ -30,34 +28,38 @@ public class StudentController {
         this.studentService = studentService;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public MessageResponseDTO create(@RequestBody @Valid StudentRequestDTO studentRequestDTO) {
         return this.studentService.create(studentRequestDTO);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public List<StudentDTO> findAll(@RequestParam(required = false) String name) {
         return this.studentService.findAll(name);
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN','RESPONSIBLE')")
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{id}")
     public StudentDTO findById(@PathVariable Long id) {
         return this.studentService.findById(id);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public MessageResponseDTO update(@PathVariable Long id, @RequestBody StudentRequestDTO studentRequestDTO) {
         return this.studentService.update(id, studentRequestDTO);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public MessageResponseDTO deleteById(@PathVariable Long id) {
         return this.studentService.deleteById(id);
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN','RESPONSIBLE')")
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{id}/occurrences")
     public List<OccurrenceDTO> findAllOccurrences(@PathVariable Long id,
                                                   @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate initialDate,

@@ -16,7 +16,7 @@ public class AuthenticatedUser implements UserDetails {
     private String username;
     private String password;
     private String role;
-    
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singletonList(new SimpleGrantedAuthority(ROLE_PREFIX + role));

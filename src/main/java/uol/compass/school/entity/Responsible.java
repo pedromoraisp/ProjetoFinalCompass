@@ -1,9 +1,6 @@
 package uol.compass.school.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import uol.compass.school.enums.EducationalLevel;
 import uol.compass.school.enums.Gender;
 import uol.compass.school.enums.RelationshipType;
@@ -14,7 +11,8 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
