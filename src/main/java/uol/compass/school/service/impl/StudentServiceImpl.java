@@ -89,7 +89,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public List<OccurrenceDTO> findAllOccurrences(Long id, LocalDate initialDate, LocalDate finalDate) {
+    public List<OccurrenceToStudentDTO> findAllOccurrences(Long id, LocalDate initialDate, LocalDate finalDate) {
         List<Occurrence> occurrences;
 
         Student student = checkIfStudentExists(id);
@@ -97,7 +97,7 @@ public class StudentServiceImpl implements StudentService {
         occurrences = (student.getOccurrences() == null) ? new ArrayList<>() : student.getOccurrences();
 
         if (initialDate == null && finalDate == null) {
-            return occurrences.stream().map(occurrence -> modelMapper.map(occurrence, OccurrenceDTO.class))
+            return occurrences.stream().map(occurrence -> modelMapper.map(occurrence, OccurrenceToStudentDTO.class))
                     .collect(Collectors.toList());
         } else {
             if (initialDate == null) {
@@ -116,7 +116,7 @@ public class StudentServiceImpl implements StudentService {
                                     (occurrence.getDate().isEqual(finalFinalDate) || occurrence.getDate().isBefore(finalFinalDate)))
                     .collect(Collectors.toList());
 
-            return filteredOccurrences.stream().map(occurrence -> modelMapper.map(occurrence, OccurrenceDTO.class))
+            return filteredOccurrences.stream().map(occurrence -> modelMapper.map(occurrence, OccurrenceToStudentDTO.class))
                     .collect(Collectors.toList());
         }
     }

@@ -15,10 +15,7 @@ import uol.compass.school.Utils.JsonUtils;
 import uol.compass.school.Utils.OccurrenceUtils;
 import uol.compass.school.Utils.StudentUtils;
 import uol.compass.school.dto.request.StudentRequestDTO;
-import uol.compass.school.dto.response.MessageResponseDTO;
-import uol.compass.school.dto.response.OccurrenceDTO;
-import uol.compass.school.dto.response.StudentDTO;
-import uol.compass.school.dto.response.StudentOccurrenceDTO;
+import uol.compass.school.dto.response.*;
 import uol.compass.school.service.StudentService;
 
 import java.util.Collections;
@@ -142,15 +139,14 @@ StudentControllerTest {
     @Test
     void whenGETToFindAllOccurrencesIsCalledThenShouldReturnOKStatus() throws Exception {
         Long id = 1L;
-        OccurrenceDTO expectedOccurrencesDTO = OccurrenceUtils.createOccurrenceDTO();
+        OccurrenceToStudentDTO expectedOccurrenceToStudentDTO = OccurrenceUtils.createOccurrenceToStudentDTO();
 
-        when(studentService.findAllOccurrences(id, null, null)).thenReturn(Collections.singletonList(expectedOccurrencesDTO));
+        when(studentService.findAllOccurrences(id, null, null)).thenReturn(Collections.singletonList(expectedOccurrenceToStudentDTO));
 
         mockMvc.perform(get("/api/v1/students/1/occurrences")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id", is(expectedOccurrencesDTO.getId().intValue())))
-                .andExpect(jsonPath("$[0].description", is(expectedOccurrencesDTO.getDescription())));
+                .andExpect(jsonPath("$[0].description", is(expectedOccurrenceToStudentDTO.getDescription())));
     }
 
     @Test

@@ -1,10 +1,7 @@
 package uol.compass.school.service;
 
 import uol.compass.school.dto.request.StudentRequestDTO;
-import uol.compass.school.dto.response.MessageResponseDTO;
-import uol.compass.school.dto.response.OccurrenceDTO;
-import uol.compass.school.dto.response.StudentDTO;
-import uol.compass.school.dto.response.StudentOccurrenceDTO;
+import uol.compass.school.dto.response.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -22,7 +19,7 @@ public interface StudentService {
 
     MessageResponseDTO deleteById(Long id);
 
-    List<OccurrenceDTO> findAllOccurrences(Long id, LocalDate initialDate, LocalDate finalDate);
+    List<OccurrenceToStudentDTO> findAllOccurrences(Long id, LocalDate initialDate, LocalDate finalDate);
 
     Set<StudentOccurrenceDTO> getOccurrencesFromStudentsLinkedToUser();
 }

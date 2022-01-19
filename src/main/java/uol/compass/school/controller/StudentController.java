@@ -6,10 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import uol.compass.school.dto.request.StudentRequestDTO;
-import uol.compass.school.dto.response.MessageResponseDTO;
-import uol.compass.school.dto.response.OccurrenceDTO;
-import uol.compass.school.dto.response.StudentDTO;
-import uol.compass.school.dto.response.StudentOccurrenceDTO;
+import uol.compass.school.dto.response.*;
 import uol.compass.school.service.StudentService;
 
 import javax.validation.Valid;
@@ -61,9 +58,9 @@ public class StudentController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{id}/occurrences")
-    public List<OccurrenceDTO> findAllOccurrences(@PathVariable Long id,
-                                                  @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate initialDate,
-                                                  @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate finalDate) {
+    public List<OccurrenceToStudentDTO> findAllOccurrences(@PathVariable Long id,
+                                                               @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate initialDate,
+                                                               @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate finalDate) {
         return studentService.findAllOccurrences(id, initialDate, finalDate);
     }
 

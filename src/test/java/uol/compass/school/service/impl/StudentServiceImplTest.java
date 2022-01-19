@@ -12,6 +12,7 @@ import uol.compass.school.Utils.StudentUtils;
 import uol.compass.school.dto.request.StudentRequestDTO;
 import uol.compass.school.dto.response.MessageResponseDTO;
 import uol.compass.school.dto.response.OccurrenceDTO;
+import uol.compass.school.dto.response.OccurrenceToStudentDTO;
 import uol.compass.school.dto.response.StudentDTO;
 import uol.compass.school.entity.Student;
 import uol.compass.school.repository.StudentRepository;
@@ -172,15 +173,15 @@ class StudentServiceImplTest {
     void whenFindAllFromAStudentIsCalledWithoutFilterThenReturnAllOccurrences() {
         Long id = 1L;
         Student expectedStudent = StudentUtils.createStudentWithOccurrences();
-        OccurrenceDTO occurrenceDTO = OccurrenceUtils.createOccurrenceDTO();
+        OccurrenceToStudentDTO occurrenceToStudentDTO = OccurrenceUtils.createOccurrenceToStudentDTO();
 
         when(studentRepository.findById(id)).thenReturn(Optional.of(expectedStudent));
-        when(modelMapper.map(expectedStudent.getOccurrences().get(0), OccurrenceDTO.class))
-                .thenReturn(occurrenceDTO);
+        when(modelMapper.map(expectedStudent.getOccurrences().get(0), OccurrenceToStudentDTO.class))
+                .thenReturn(occurrenceToStudentDTO);
 
-        List<OccurrenceDTO> allOccurrences = studentService.findAllOccurrences(id, null, null);
+        List<OccurrenceToStudentDTO> allOccurrences = studentService.findAllOccurrences(id, null, null);
 
-        assertEquals(Collections.singletonList(occurrenceDTO), allOccurrences);
+        assertEquals(Collections.singletonList(occurrenceToStudentDTO), allOccurrences);
     }
 
     @Test
@@ -190,7 +191,7 @@ class StudentServiceImplTest {
 
         when(studentRepository.findById(id)).thenReturn(Optional.of(expectedStudent));
 
-        List<OccurrenceDTO> allOccurrences = studentService.findAllOccurrences(id, null, null);
+        List<OccurrenceToStudentDTO> allOccurrences = studentService.findAllOccurrences(id, null, null);
 
         assertEquals(Collections.emptyList(), allOccurrences);
     }
@@ -200,18 +201,18 @@ class StudentServiceImplTest {
         Long id = 1L;
         Student expectedStudent = StudentUtils.createStudentWithOccurrences();
         expectedStudent.getOccurrences().get(0).setDate(LocalDate.of(2021, 01, 15));
-        OccurrenceDTO occurrenceDTO = OccurrenceUtils.createOccurrenceDTO();
+        OccurrenceToStudentDTO occurrenceToStudentDTO = OccurrenceUtils.createOccurrenceToStudentDTO();
 
         when(studentRepository.findById(id)).thenReturn(Optional.of(expectedStudent));
-        when(modelMapper.map(expectedStudent.getOccurrences().get(0), OccurrenceDTO.class))
-                .thenReturn(occurrenceDTO);
+        when(modelMapper.map(expectedStudent.getOccurrences().get(0), OccurrenceToStudentDTO.class))
+                .thenReturn(occurrenceToStudentDTO);
 
-        List<OccurrenceDTO> allOccurrences = studentService.findAllOccurrences(
+        List<OccurrenceToStudentDTO> allOccurrences = studentService.findAllOccurrences(
                 id,
                 LocalDate.of(2021, 1, 1),
                 LocalDate.of(2021, 12, 31));
 
-        assertEquals(Collections.singletonList(occurrenceDTO), allOccurrences);
+        assertEquals(Collections.singletonList(occurrenceToStudentDTO), allOccurrences);
     }
 
     @Test
@@ -219,18 +220,18 @@ class StudentServiceImplTest {
         Long id = 1L;
         Student expectedStudent = StudentUtils.createStudentWithOccurrences();
         expectedStudent.getOccurrences().get(0).setDate(LocalDate.of(2021, 01, 15));
-        OccurrenceDTO occurrenceDTO = OccurrenceUtils.createOccurrenceDTO();
+        OccurrenceToStudentDTO occurrenceToStudentDTO = OccurrenceUtils.createOccurrenceToStudentDTO();
 
         when(studentRepository.findById(id)).thenReturn(Optional.of(expectedStudent));
-        when(modelMapper.map(expectedStudent.getOccurrences().get(0), OccurrenceDTO.class))
-                .thenReturn(occurrenceDTO);
+        when(modelMapper.map(expectedStudent.getOccurrences().get(0), OccurrenceToStudentDTO.class))
+                .thenReturn(occurrenceToStudentDTO);
 
-        List<OccurrenceDTO> allOccurrences = studentService.findAllOccurrences(
+        List<OccurrenceToStudentDTO> allOccurrences = studentService.findAllOccurrences(
                 id,
                 LocalDate.of(2021, 1, 1),
                 null);
 
-        assertEquals(Collections.singletonList(occurrenceDTO), allOccurrences);
+        assertEquals(Collections.singletonList(occurrenceToStudentDTO), allOccurrences);
     }
 
     @Test
@@ -238,18 +239,18 @@ class StudentServiceImplTest {
         Long id = 1L;
         Student expectedStudent = StudentUtils.createStudentWithOccurrences();
         expectedStudent.getOccurrences().get(0).setDate(LocalDate.of(2021, 01, 15));
-        OccurrenceDTO occurrenceDTO = OccurrenceUtils.createOccurrenceDTO();
+        OccurrenceToStudentDTO occurrenceToStudentDTO = OccurrenceUtils.createOccurrenceToStudentDTO();
 
         when(studentRepository.findById(id)).thenReturn(Optional.of(expectedStudent));
-        when(modelMapper.map(expectedStudent.getOccurrences().get(0), OccurrenceDTO.class))
-                .thenReturn(occurrenceDTO);
+        when(modelMapper.map(expectedStudent.getOccurrences().get(0), OccurrenceToStudentDTO.class))
+                .thenReturn(occurrenceToStudentDTO);
 
-        List<OccurrenceDTO> allOccurrences = studentService.findAllOccurrences(
+        List<OccurrenceToStudentDTO> allOccurrences = studentService.findAllOccurrences(
                 id,
                 null,
                 LocalDate.of(2021, 12, 31));
 
-        assertEquals(Collections.singletonList(occurrenceDTO), allOccurrences);
+        assertEquals(Collections.singletonList(occurrenceToStudentDTO), allOccurrences);
     }
 
     @Test
@@ -260,7 +261,7 @@ class StudentServiceImplTest {
 
         when(studentRepository.findById(id)).thenReturn(Optional.of(expectedStudent));
 
-        List<OccurrenceDTO> allOccurrences = studentService.findAllOccurrences(
+        List<OccurrenceToStudentDTO> allOccurrences = studentService.findAllOccurrences(
                 id,
                 LocalDate.of(2021, 1, 1),
                 LocalDate.of(2021, 12, 31));
